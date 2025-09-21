@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="all">Travel Site</title>
+  <link rel="stylesheet" href="InfosysProjectstyle.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali&family=Noto+Sans+Devanagari&family=Noto+Sans+Tamil&family=Noto+Sans&display=swap" rel="stylesheet">
+  <style>
+    [lang="bn"] { font-family: 'Noto Sans Bengali', sans-serif; }
+    [lang="hi"] { font-family: 'Noto Sans Devanagari', sans-serif; }
+    [lang="ta"] { font-family: 'Noto Sans Tamil', sans-serif; }
+    [lang="mr"] { font-family: 'Noto Sans', sans-serif; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="navbar">
+      <div class="nav-logo border">
+        <div class="logo">
+          <img src="https://i.postimg.cc/ryQ4kbxM/Whats-App-Image-2025-07-09-at-11-07-54-AM.jpg" alt="Logo" style="height: 40px;">
+        </div>
+      </div>
+
+      <div class="language">
+        <i class="fa-solid fa-globe"></i>
+        <select id="language" onchange="changeLanguage()">
+          <option value="en" data-i18n="lang_en">English</option>
+          <option value="bn" data-i18n="lang_bn">Bengali</option>
+          <option value="hi" data-i18n="lang_hi">Hindi</option>
+          <option value="ta" data-i18n="lang_ta">Tamil</option>
+          <option value="mr" data-i18n="lang_mr">Marathi</option>
+        </select>
+      </div>
+
+      <div class="contact">
+        <i class="fa-solid fa-phone"></i>
+        <a href="contact.html" data-i18n="contact_us">Contact Us</a>
+      </div>
+      <div class="terms-condition">
+        <i class="fa-solid fa-file"></i>
+        <a href="T&C.html" data-i18n="terms_conditions">Terms&Condition</a>
+      </div>
+
+      <div class="nav-signin border">
+        <a href="signinpage.html" class="signin-link">
+          <i class="fa-solid fa-circle-user" style="padding-right:3px"></i>
+          <span data-i18n="login_signup">Login/Sign up</span>
+        </a>
+      </div>
+
+      <div class="nav-icon">
+        <div class="info"><a href="#"><i class="fa-solid fa-info"></i></a></div>
+        <div class="question"><a href="#"><i class="fa-solid fa-question"></i></a></div>
+        <div class="settings"><a href="#"><i class="fa-solid fa-gear"></i></a></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-all"><i class="fa-solid fa-bars"></i> <span data-i18n="all">All</span></div>
+      <div class="panel-options">
+        <p class="underline" data-i18n="home">Home</p>
+        <p class="underline" data-i18n="promo">Promo</p>
+        <p class="underline" data-i18n="booking">Booking</p>
+        <p class="underline" data-i18n="special">Special</p>
+        <p class="underline" data-i18n="blog">Blog</p>
+        <p class="underline" data-i18n="contact_us">Contact Us</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="hero-section">
+    <div class="nav-search">
+      <form id="searchForm" class="search-container">
+        <div class="search-input-group">
+          <input type="text" class="search-input" id="searchInput"
+                 placeholder="Search by city, hotel, or neighborhood"
+                 data-i18n-placeholder="search_placeholder">
+          <button type="button" class="near-me-button">
+            <span class="icon"><i class="fa-solid fa-location-crosshairs"></i></span>
+            <span data-i18n="near_me">Near me</span>
+          </button>
+        </div>
+        <div class="date-picker">
+          <label for="checkin" data-i18n="check_in">Check-in:</label>
+          <input type="date" id="checkin" name="checkin" required>
+          <label for="checkout" data-i18n="check_out">Check-out:</label>
+          <input type="date" id="checkout" name="checkout" required>
+        </div>
+        <div class="guests-rooms">
+          <label for="rooms" data-i18n="rooms">Rooms:</label>
+          <select id="rooms" name="rooms">
+            <option value="1" data-i18n="rooms_1">1 Room</option>
+            <option value="2" data-i18n="rooms_2">2 Rooms</option>
+            <option value="3" data-i18n="rooms_3">3 Rooms</option>
+            <option value="4" data-i18n="rooms_4">4 Rooms</option>
+          </select>
+
+          <label for="guests" data-i18n="guests">Guests:</label>
+          <select id="guests" name="guests">
+            <option value="1" data-i18n="guests_1">1 Guest</option>
+            <option value="2" data-i18n="guests_2">2 Guests</option>
+            <option value="3" data-i18n="guests_3">3 Guests</option>
+            <option value="4" data-i18n="guests_4">4 Guests</option>
+          </select>
+        </div>
+        <button type="submit" class="search-button" data-i18n="search">Search</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="travel-section">
+    <div class="section-one">
+      <div class="box1 box">
+        <div class="box-content">
+          <a href="homestays.html" class="box-link">
+            <div class="box-img image_style" style="background-image: url('https://mlkru5gimsp2.i.optimole.com/cb:CTTU.37a0d/w:382/h:254/q:mauto/rt:fill/g:ce/f:best/https://vasthavya.com/wp-content/uploads/2024/08/Homestays-and-Resorts-in-Peak-Season.png');"></div>
+          </a>
+          <h2 data-i18n="homestays">Homestays</h2>
+        </div>
+      </div>
+      <div class="box2 box">
+        <div class="box-content">
+          <a href="vehicles.html" class="box-link">
+            <div class="box-img image_style" style="background-image: url('https://www.easyvehiclerental.com/public/uploads/maratika-tour-by-jeep67.jpg');"></div>
+          </a>
+          <h2 data-i18n="local_vehicle">Local vehicle</h2>
+        </div>
+      </div>
+    </div>
+    <div class="section-two">
+      <div class="box3 box">
+        <div class="box-content">
+          <a href="guide.html" class="box-link">
+            <div class="box-img image_style" style="background-image: url('https://images.herzindagi.info/her-zindagi-hindi/images/2025/06/24/article/image/us-issues-level-2-travel-advisory-for-womens-visiting-india-avoid-solo-travel-in-these-cities-1750751598366.webp');"></div>
+          </a>
+          <h2 data-i18n="tour_guide">Tour guide</h2>
+        </div>
+      </div>
+      <div class="box4 box">
+        <div class="box-content">
+          <a href="plan.html" class="box-link">
+            <div class="box-img image_style" style="background-image: url('https://img.freepik.com/premium-photo/young-people-together-planning-trip-europe-top-view-empty-white-space-notebook-where-you-time-plan-text-travel-concept_292052-1627.jpg');"></div>
+          </a>
+          <h2 data-i18n="tour_plan">Tour Plan</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-three">
+    <a href="food.html" class="box-link">
+      <div class="food-bar">
+        <div class="food-bar-img"></div>
+      </div>
+    </a>
+  </div>
+  <div class="food-tag">
+    <h2 data-i18n="book_meal">🍽 Book Your Village Meal Now and get upto 40% off</h2>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section about">
+        <h3 data-i18n="about_gaosaathi_title">About GaoSaathi</h3>
+        <p data-i18n="about_gaosaathi">Discover the beauty of village life, stay with us.</p>
+      </div>
+      <div class="footer-section links">
+        <h3 data-i18n="quick_links">Quick Links</h3>
+        <ul>
+          <li><a href="#" data-i18n="about">About</a></li>
+          <li><a href="#" data-i18n="help">Help</a></li>
+          <li><a href="#" data-i18n="privacy_policy">Privacy Policy</a></li>
+          <li><a href="#" data-i18n="faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-section contact">
+        <h3 data-i18n="contact_us">Contact Us</h3>
+        <p data-i18n="contact_email">gaosaathi123@gmail.com</p>
+        <p data-i18n="contact_phone">+91 1234567890</p>
+        <p data-i18n="contact_location">Location: Kolkata</p>
+      </div>
+      <div class="footer-section social">
+        <h3 data-i18n="follow_us">Follow Us</h3>
+        <a href="#" data-i18n="facebook">Facebook</a> |
+        <a href="#" data-i18n="youtube">Youtube</a> |
+        <a href="#" data-i18n="instagram">Instagram</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <i class="fa-brands fa-google"></i>
+      <i class="fa-brands fa-facebook"></i>
+      <i class="fa-brands fa-instagram"></i>
+      <i class="fa-brands fa-youtube"></i>
+      <i class="fa-brands fa-x-twitter"></i>
+      <i class="fa-brands fa-linkedin"></i>
+      <p data-i18n="footer">© 2025 GaoSaathi. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBK00H5IWIqyetOy8nvQZ1Bun4X008iGxA",
+    authDomain: "gaosaathi-871e1.firebaseapp.com",
+    projectId: "gaosaathi-871e1",
+    storageBucket: "gaosaathi-871e1.firebasestorage.app",
+    messagingSenderId: "97738585244",
+    appId: "1:97738585244:web:401dc5ef675aa01b756959",
+    measurementId: "G-F1SSXN6146"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+
+  const translations = {
+    // ... (your existing translation data for en, bn, hi, ta, mr) ...
+    en: {
+      all: "Travel Site",
+      lang_en: "English",
+      lang_bn: "Bengali",
+      lang_hi: "Hindi",
+      lang_ta: "Tamil",
+      lang_mr: "Marathi",
+      contact_us: "Contact Us",
+      terms_conditions: "Terms & Condition",
+      login_signup: "Login/Sign up",
+      home: "Home",
+      promo: "Promo",
+      booking: "Booking",
+      special: "Special",
+      blog: "Blog",
+      search_placeholder: "Search by city, hotel, or neighborhood",
+      near_me: "Near me",
+      check_in: "Check-in:",
+      check_out: "Check-out:",
+      rooms: "Rooms:",
+      rooms_1: "1 Room",
+      rooms_2: "2 Rooms",
+      rooms_3: "3 Rooms",
+      rooms_4: "4 Rooms",
+      guests: "Guests:",
+      guests_1: "1 Guest",
+      guests_2: "2 Guests",
+      guests_3: "3 Guests",
+      guests_4: "4 Guests",
+      search: "Search",
+      homestays: "Homestays",
+      local_vehicle: "Local vehicle",
+      tour_guide: "Tour guide",
+      tour_plan: "Tour Plan",
+      book_meal: "🍽 Book Your Village Meal Now and get upto 40% off",
+      about_gaosaathi_title: "About GaoSaathi",
+      about_gaosaathi: "Discover the beauty of village life, stay with us.",
+      quick_links: "Quick Links",
+      about: "About",
+      help: "Help",
+      privacy_policy: "Privacy Policy",
+      faq: "FAQ",
+      contact_email: "gaosaathi123@gmail.com",
+      contact_phone: "+91 1234567890",
+      contact_location: "Location: Kolkata",
+      follow_us: "Follow Us",
+      facebook: "Facebook",
+      youtube: "Youtube",
+      instagram: "Instagram",
+      footer: "© 2025 GaoSaathi. All rights reserved."
+    },
+    bn: {
+      all: "ভ্রমণ সাইট",
+      lang_en: "ইংরাজি",
+      lang_bn: "বাংলা",
+      lang_hi: "হিন্দি",
+      lang_ta: "তামিল",
+      lang_mr: "মারাঠি",
+      contact_us: "যোগাযোগ করুন",
+      terms_conditions: "শর্তাবলী",
+      login_signup: "লগইন/সাইন আপ",
+      home: "হোম",
+      promo: "প্রচার",
+      booking: "বুকিং",
+      special: "বিশেষ",
+      blog: "ব্লগ",
+      search_placeholder: "শহর, হোটেল বা এলাকার নাম দিয়ে অনুসন্ধান করুন",
+      near_me: "আমার কাছাকাছি",
+      check_in: "চেক-ইন:",
+      check_out: "চেক-আউট:",
+      rooms: "রুম:",
+      rooms_1: "১ রুম",
+      rooms_2: "২ রুম",
+      rooms_3: "৩ রুম",
+      rooms_4: "৪ রুম",
+      guests: "অতিথি:",
+      guests_1: "১ জন অতিথি",
+      guests_2: "২ জন অতিথি",
+      guests_3: "৩ জন অতিথি",
+      guests_4: "৪ জন অতিথি",
+      search: "অনুসন্ধান",
+      homestays: "হোমস্টে",
+      local_vehicle: "স্থানীয় যানবাহন",
+      tour_guide: "ট্যুর গাইড",
+      tour_plan: "ট্যুর প্ল্যান",
+      book_meal: "🍽 আপনার গ্রামের খাবার বুক করুন এবং ৪০% পর্যন্ত ছাড় পান",
+      about_gaosaathi_title: "গাওসাথী সম্পর্কে",
+      about_gaosaathi: "গ্রাম জীবনের সৌন্দর্য আবিষ্কার করুন, আমাদের সাথে থাকুন।",
+      quick_links: "দ্রুত লিঙ্ক",
+      about: "সম্পর্কে",
+      help: "সাহায্য",
+      privacy_policy: "গোপনীয়তা নীতি",
+      faq: "প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী",
+      contact_email: "gaosaathi123@gmail.com",
+      contact_phone: "+91 1234567890",
+      contact_location: "অবস্থান: কলকাতা",
+      follow_us: "আমাদের অনুসরণ করুন",
+      facebook: "ফেসবুক",
+      youtube: "ইউটিউব",
+      instagram: "ইনস্টাগ্রাম",
+      footer: "© ২০২৫ গাওসাথী। সর্বস্বত্ব সংরক্ষিত।"
+    },
+    hi: {
+      all: "यात्रा साइट",
+      lang_en: "अंग्रेज़ी",
+      lang_bn: "बंगाली",
+      lang_hi: "हिंदी",
+      lang_ta: "तमिल",
+      lang_mr: "मराठी",
+      contact_us: "हमसे संपर्क करें",
+      terms_conditions: "नियम और शर्तें",
+      login_signup: "लॉगिन/साइन अप करें",
+      home: "होम",
+      promo: "प्रोमो",
+      booking: "बुकिंग",
+      special: "विशेष",
+      blog: "ब्लॉग",
+      search_placeholder: "शहर, होटल या पड़ोस के अनुसार खोजें",
+      near_me: "मेरे पास",
+      check_in: "चेक-इन:",
+      check_out: "चेक-आउट:",
+      rooms: "कमरे:",
+      rooms_1: "1 कमरा",
+      rooms_2: "2 कमरे",
+      rooms_3: "3 कमरे",
+      rooms_4: "4 कमरे",
+      guests: "अतिथि:",
+      guests_1: "1 अतिथि",
+      guests_2: "2 अतिथि",
+      guests_3: "3 अतिथि",
+      guests_4: "4 अतिथि",
+      search: "खोज",
+      homestays: "होमस्टे",
+      local_vehicle: "स्थानीय वाहन",
+      tour_guide: "टूर गाइड",
+      tour_plan: "टूर प्लान",
+      book_meal: "🍽 अपना गाँव का भोजन अभी बुक करें और 40% तक की छूट पाएं",
+      about_gaosaathi_title: "गाओसाथी के बारे में",
+      about_gaosaathi: "ग्राम जीवन की सुंदरता का अन्वेषण करें, हमारे साथ रहें।",
+      quick_links: "त्वरित लिंक",
+      about: "के बारे में",
+      help: "सहायता",
+      privacy_policy: "गोपनीयता नीति",
+      faq: "अक्सर पूछे जाने वाले प्रश्न",
+      contact_email: "gaosaathi123@gmail.com",
+      contact_phone: "+91 1234567890",
+      contact_location: "स्थान: कोलकाता",
+      follow_us: "हमारा अनुसरण करें",
+      facebook: "फेसबुक",
+      youtube: "यूट्यूब",
+      instagram: "इंस्टाग्राम",
+      footer: "© 2025 गाओसाथी। सर्वाधिकार सुरक्षित।"
+    },
+    ta: {
+      all: "பயணத் தளம்",
+      lang_en: "ஆங்கிலம்",
+      lang_bn: "பெங்காலி",
+      lang_hi: "ஹிந்தி",
+      lang_ta: "தமிழ்",
+      lang_mr: "மராத்தி",
+      contact_us: "எங்களை தொடர்பு கொள்ளவும்",
+      terms_conditions: "விதிமுறைகள் & நிபந்தனைகள்",
+      login_signup: "உள்நுழை/பதிவு செய்",
+      home: "முகப்பு",
+      promo: "விளம்பரம்",
+      booking: "முன்பதிவு",
+      special: "சிறப்பு",
+      blog: "வலைப்பதிவு",
+      search_placeholder: "நகரம், ஹோட்டல் அல்லது பகுதி மூலம் தேடவும்",
+      near_me: "அருகில்",
+      check_in: "செக்-இன்:",
+      check_out: "செக்-அவுட்:",
+      rooms: "அறைகள்:",
+      rooms_1: "1 அறை",
+      rooms_2: "2 அறைகள்",
+      rooms_3: "3 அறைகள்",
+      rooms_4: "4 அறைகள்",
+      guests: "விருந்தினர்கள்:",
+      guests_1: "1 விருந்தினர்",
+      guests_2: "2 விருந்தினர்கள்",
+      guests_3: "3 விருந்தினர்கள்",
+      guests_4: "4 விருந்தினர்கள்",
+      search: "தேடல்",
+      homestays: "வீட்டுத் தங்குமிடங்கள்",
+      local_vehicle: "உள்ளூர் வாகனம்",
+      tour_guide: "சுற்றுலா வழிகாட்டி",
+      tour_plan: "சுற்றுலா திட்டம்",
+      book_meal: "🍽 உங்கள் கிராம உணவை இப்போதே முன்பதிவு செய்யுங்கள் மற்றும் 40% வரை தள்ளுபடி பெறுங்கள்",
+      about_gaosaathi_title: "காவ்சாத்தி பற்றி",
+      about_gaosaathi: "கிராம வாழ்க்கையின் அழகைக் கண்டறியுங்கள், எங்களுடன் தங்குங்கள்.",
+      quick_links: "விரைவு இணைப்புகள்",
+      about: "பற்றி",
+      help: "உதவி",
+      privacy_policy: "தனியுரிமைக் கொள்கை",
+      faq: "அடிக்கடி கேட்கப்படும் கேள்விகள்",
+      contact_email: "gaosaathi123@gmail.com",
+      contact_phone: "+91 1234567890",
+      contact_location: "இடம்: கொல்கத்தா",
+      follow_us: "எங்களை பின்தொடரவும்",
+      facebook: "பேஸ்புக்",
+      youtube: "யூடியூப்",
+      instagram: "இன்ஸ்டாகிராம்",
+      footer: "© 2025 காவ்சாத்தி. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை."
+    },
+    mr: {
+      all: "प्रवास साइट",
+      lang_en: "इंग्रजी",
+      lang_bn: "बंगाली",
+      lang_hi: "हिंदी",
+      lang_ta: "तमिळ",
+      lang_mr: "मराठी",
+      contact_us: "आमच्याशी संपर्क साधा",
+      terms_conditions: "अटी व शर्ती",
+      login_signup: "लॉगिन/साइन अप करा",
+      home: "मुख्यपृष्ठ",
+      promo: "प्रोमो",
+      booking: "बुकिंग",
+      special: "विशेष",
+      blog: "ब्लॉग",
+      search_placeholder: "शहर, हॉटेल किंवा परिसरानुसार शोधा",
+      near_me: "माझ्या जवळ",
+      check_in: "चेक-इन:",
+      check_out: "चेक-आउट:",
+      rooms: "खोल्या:",
+      rooms_1: "1 खोली",
+      rooms_2: "2 खोल्या",
+      rooms_3: "3 खोल्या",
+      rooms_4: "4 खोल्या",
+      guests: "अतिथि:",
+      guests_1: "1 अतिथी",
+      guests_2: "2 अतिथी",
+      guests_3: "3 अतिथी",
+      guests_4: "4 अतिथी",
+      search: "शोधा",
+      homestays: "होमस्टे",
+      local_vehicle: "स्थानिक वाहन",
+      tour_guide: "पर्यटन मार्गदर्शक",
+      tour_plan: "पर्यटन योजना",
+      book_meal: "🍽 आपले गावचे जेवण आताच बुक करा आणि 40% पर्यंत सूट मिळवा",
+      about_gaosaathi_title: "गावसाथी बद्दल",
+      about_gaosaathi: "गावच्या जीवनाचे सौंदर्य शोधा, आमच्यासोबत रहा.",
+      quick_links: "त्वरित लिंक्स",
+      about: "बद्दल",
+      help: "मदत",
+      privacy_policy: "गोपनीयता धोरण",
+      faq: "नेहमी विचारले जाणारे प्रश्न",
+      contact_email: "gaosaathi123@gmail.com",
+      contact_phone: "+91 1234567890",
+      contact_location: "स्थान: कोलकाता",
+      follow_us: "आम्हाला फॉलो करा",
+      youtube: "यूट्यूब",
+      instagram: "इंस्टाग्राम",
+      footer: "© 2025 गावसाथी. सर्व हक्क राखीव."
+    }
+  };
+  let currentLanguage = localStorage.getItem('language') || 'en';
+
+  function updateContent() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      // Fallback to English if translation for current language is not found
+      el.textContent = translations[currentLanguage][key] || translations['en'][key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      // Fallback to English if translation for current language is not found
+      el.placeholder = translations[currentLanguage][key] || translations['en'][key];
+    });
+  }
+
+  // Make changeLanguage globally accessible by attaching it to the window object
+  window.changeLanguage = function() {
+    const language = document.getElementById('language').value;
+    localStorage.setItem('language', language);
+    document.documentElement.setAttribute('lang', language);
+    currentLanguage = language;
+    updateContent();
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Set the dropdown to the currently stored language
+    document.getElementById('language').value = currentLanguage;
+    // Set the lang attribute on the html tag
+    document.documentElement.setAttribute('lang', currentLanguage);
+    // Update content on page load
+    updateContent();
+
+    const searchForm = document.getElementById('searchForm');
+    searchForm.addEventListener('submit', async (event) => {
+      event.preventDefault(); // Prevent default form submission (page refresh)
+
+      const searchInput = document.getElementById('searchInput').value;
+      const checkin = document.getElementById('checkin').value;
+      const checkout = document.getElementById('checkout').value;
+      const rooms = document.getElementById('rooms').value;
+      const guests = document.getElementById('guests').value;
+
+      const searchData = {
+        query: searchInput,
+        checkinDate: checkin,
+        checkoutDate: checkout,
+        numberOfRooms: rooms,
+        numberOfGuests: guests,
+        timestamp: serverTimestamp() // Add timestamp
+      };
+
+      try {
+        // Save search data to Firebase Firestore
+        await addDoc(collection(db, "searchQueries"), searchData);
+        console.log("Search data saved to Firebase:", searchData);
+
+        // Construct URL for the results page
+        const queryParams = new URLSearchParams(searchData).toString();
+        window.location.href = `search_results.html?${queryParams}`; // Redirect to new page
+
+      } catch (error) {
+        console.error("Error saving search data to Firebase:", error);
+        // Optionally, inform the user about the error
+        alert("There was an error processing your search. Please try again.");
+      }
+    });
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title data-i18n="homestay_listings_title">Homestay Listings</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .hotel-list {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .hotel-card {
+      display: flex;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .hotel-card:hover {
+      transform: scale(1.01);
+    }
+
+    .hotel-images {
+      flex: 1.2;
+    }
+
+    .hotel-images img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hotel-details {
+      flex: 1.8;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between; /* To push the button to the bottom */
+    }
+
+    .hotel-title {
+      font-size: 1.5rem;
+      color: #222;
+      margin-bottom: 10px;
+    }
+
+    .location {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 1.2rem;
+      color: #008080;
+      margin-bottom: 15px;
+    }
+
+    .description {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #444;
+      margin-bottom: 20px;
+      /* Space before button */
+    }
+
+    .book-now-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+      align-self: flex-start;
+      /* Align button to start of flex item */
+    }
+
+    .book-now-btn:hover {
+      background-color: #0056b3;
+    }
+
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      display: none; /* Hidden by default */
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #555;
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-content label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .modal-content input[type="date"],
+    .modal-content input[type="number"],
+    .modal-content input[type="text"] {
+      width: calc(100% - 22px);
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+
+    .modal-content .estimated-price {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 1.2em;
+      color: #333;
+      font-weight: bold;
+      display: none;
+    }
+
+    .modal-content .payment-options {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .modal-content .payment-options label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-weight: normal;
+      color: #555;
+    }
+
+    .modal-content .payment-options input[type="radio"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+
+    .modal-content .btn {
+      margin-top: 25px;
+      padding: 12px;
+      background-color: #6c7a89;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    .modal-content .btn:hover {
+      background-color: #00008b;
+    }
+
+    .modal-content .pay-btn {
+      background-color: #28a745;
+      margin-top: 10px;
+      /* Adjusted margin */
+    }
+
+    .modal-content .pay-btn:hover {
+      background-color: #218838;
+    }
+
+    @media(max-width: 768px) {
+      .hotel-card {
+        flex-direction: column;
+      }
+
+      .hotel-images img {
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1 style="text-align:center; margin-bottom: 40px;" data-i18n="homestay_listings_heading">🏡 Homestay Listings</h1>
+
+  <div style="text-align: right; margin-bottom: 20px; padding-right: 20px;">
+    <label for="language" data-i18n="select_language">Select Language:</label>
+    <select id="language" onchange="changeLanguage()">
+      <option value="en" data-i18n="lang_en">English</option>
+      <option value="bn" data-i18n="lang_bn">Bengali</option>
+      <option value="hi" data-i18n="lang_hi">Hindi</option>
+      <option value="ta" data-i18n="lang_ta">Tamil</option>
+      <option value="mr" data-i18n="lang_mr">Marathi</option>
+    </select>
+  </div>
+
+  <div class="hotel-list">
+
+    <div class="hotel-card" data-homestay-id="green-valley" data-price-per-night="3500">
+      <div class="hotel-images">
+        <img src="https://gos3.ibcdn.com/43de47e5-145d-4b28-bea0-31faa617ae22.jpg" alt="Hotel Image">
+      </div>
+      <div class="hotel-details">
+        <div>
+          <div class="hotel-title" data-i18n="green_valley_homestay_title">Green Valley Homestay</div>
+          <div class="location" data-i18n="himachal_pradesh_location">📍 Himachal Pradesh</div>
+          <div class="price" data-i18n="price_per_night_3500">₹3500/night</div>
+          <div class="description" data-i18n="green_valley_description">
+            Cozy homestay with mountain views.
+          </div>
+        </div>
+        <button class="book-now-btn" data-i18n="book_now_button">Book Now</button>
+      </div>
+    </div>
+
+    <div class="hotel-card" data-homestay-id="riverside-cottage" data-price-per-night="4200">
+      <div class="hotel-images">
+        <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/62/2f/3d/aajol-the-village-homestay.jpg?w=500&h=-1&s=1" alt="Hotel Image">
+      </div>
+      <div class="hotel-details">
+        <div>
+          <div class="hotel-title" data-i18n="riverside_cottage_title">Riverside Cottage</div>
+          <div class="location" data-i18n="kerala_location">📍Kerala</div>
+          <div class="price" data-i18n="price_per_night_4200">₹4200/night</div>
+          <div class="description" data-i18n="riverside_cottage_description">
+            Relaxing cottage by the river.
+          </div>
+        </div>
+        <button class="book-now-btn" data-i18n="book_now_button">Book Now</button>
+      </div>
+    </div>
+
+    <div class="hotel-card" data-homestay-id="rustic-farmhouse" data-price-per-night="2800">
+      <div class="hotel-images">
+        <img src="https://media-cdn.tripadvisor.com/media/photo-s/0e/54/c4/d1/paddy-homestay.jpg" alt="Hotel Image">
+      </div>
+      <div class="hotel-details">
+        <div>
+          <div class="hotel-title" data-i18n="rustic_farmhouse_title">Rustic Farmhouse</div>
+          <div class="location" data-i18n="punjab_location">📍 Punjab</div>
+          <div class="price" data-i18n="price_per_night_2800">₹2800/night</div>
+          <div class="description" data-i18n="rustic_farmhouse_description">
+            Authentic village experience.
+          </div>
+        </div>
+        <button class="book-now-btn" data-i18n="book_now_button">Book Now</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal-overlay" id="bookingModalOverlay">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModalBtn">&times;</span>
+      <h2 id="modalHomestayTitle" data-i18n="book_homestay_modal_title">Book Homestay</h2>
+      <form id="homestayBookingForm">
+        <label for="checkInDate" data-i18n="check_in_date_label">Check-in Date:</label>
+        <input type="date" id="checkInDate" name="checkInDate" required>
+
+        <label for="checkOutDate" data-i18n="check_out_date_label">Check-out Date:</label>
+        <input type="date" id="checkOutDate" name="checkOutDate" required>
+
+        <label for="numberOfGuests" data-i18n="number_of_guests_label">Number of Guests:</label>
+        <input type="number" id="numberOfGuests" name="numberOfGuests" min="1" value="1" required>
+
+        <div id="estimatedPriceDisplayModal" class="estimated-price">
+          <span data-i18n="estimated_price_label">Estimated Price:</span> <span id="priceAmountModal"></span>
+        </div>
+
+        <div class="payment-options">
+          <label data-i18n="select_payment_method_label">Select Payment Method:</label>
+          <label>
+            <input type="radio" name="paymentMethod" value="card" checked> <span data-i18n="card_payment_option">Card Payment</span>
+          </label>
+          <label>
+            <input type="radio" name="paymentMethod" value="upi"> <span data-i18n="upi_option">UPI</span>
+          </label>
+          <label>
+            <input type="radio" name="paymentMethod" value="netbanking"> <span data-i18n="netbanking_option">Net Banking</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn" data-i18n="confirm_booking_button">Confirm Booking</button>
+        <button type="button" class="btn pay-btn" id="makePaymentBtnModal" data-i18n="make_payment_button">Make Payment</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Firebase configuration (REPLACE WITH YOUR ACTUAL CONFIG)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      databaseURL: "https://gaosaathi-871e1-default-rtdb.firebaseio.com/", // Your provided database URL
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    // Get a reference to the database service
+
+    // Translations object
+    const translations = {
+      en: {
+        homestay_listings_title: "Homestay Listings",
+        homestay_listings_heading: "🏡 Homestay Listings",
+        select_language: "Select Language:",
+        lang_en: "English",
+        lang_bn: "Bengali",
+        lang_hi: "Hindi",
+        lang_ta: "Tamil",
+        lang_mr: "Marathi",
+        green_valley_homestay_title: "Green Valley Homestay",
+        himachal_pradesh_location: "📍 Himachal Pradesh",
+        price_per_night_3500: "₹3500/night",
+        green_valley_description: "Cozy homestay with mountain views.",
+        riverside_cottage_title: "Riverside Cottage",
+        kerala_location: "📍Kerala",
+        price_per_night_4200: "₹4200/night",
+        riverside_cottage_description: "Relaxing cottage by the river.",
+        rustic_farmhouse_title: "Rustic Farmhouse",
+        punjab_location: "📍 Punjab",
+        price_per_night_2800: "₹2800/night",
+        rustic_farmhouse_description: "Authentic village experience.",
+        book_now_button: "Book Now",
+        book_homestay_modal_title: "Book Homestay",
+        check_in_date_label: "Check-in Date:",
+        check_out_date_label: "Check-out Date:",
+        number_of_guests_label: "Number of Guests:",
+        estimated_price_label: "Estimated Price:",
+        select_payment_method_label: "Select Payment Method:",
+        card_payment_option: "Card Payment",
+        upi_option: "UPI",
+        netbanking_option: "Net Banking",
+        confirm_booking_button: "Confirm Booking",
+        make_payment_button: "Make Payment",
+        booking_confirmed_alert: (title, price) => `Booking for ${title} confirmed! Estimated Price: ₹${price}. Please proceed to payment.`,
+        booking_error_alert: "Error confirming booking. Please try again.",
+        fill_details_alert: "Please fill in all booking details correctly (including valid dates and guests).",
+        payment_successful_alert: (title, checkIn, checkOut, guests, method) => `Payment for your ${title} booking from ${checkIn} to ${checkOut} for ${guests} guests via ${method} is successful!\nThank you for your booking!`,
+        payment_error_alert: "Please confirm your booking details and ensure a valid price is calculated before making payment."
+      },
+      bn: {
+        homestay_listings_title: "হোমস্টে তালিকা",
+        homestay_listings_heading: "🏡 হোমস্টে তালিকা",
+        select_language: "ভাষা নির্বাচন করুন:",
+        lang_en: "ইংরাজি",
+        lang_bn: "বাংলা",
+        lang_hi: "হিন্দি",
+        lang_ta: "তামিল",
+        lang_mr: "মারাঠি",
+        green_valley_homestay_title: "গ্রীন ভ্যালি হোমস্টে",
+        himachal_pradesh_location: "📍 হিমাচল প্রদেশ",
+        price_per_night_3500: "₹3500/রাত",
+        green_valley_description: "পাহাড়ের দৃশ্য সহ আরামদায়ক হোমস্টে।",
+        riverside_cottage_title: "রিভারসাইড কটেজ",
+        kerala_location: "📍কেরালা",
+        price_per_night_4200: "₹4200/রাত",
+        riverside_cottage_description: "নদীর ধারে আরামদায়ক কটেজ।",
+        rustic_farmhouse_title: "গ্রাম্য ফার্মহাউস",
+        punjab_location: "📍 পাঞ্জাব",
+        price_per_night_2800: "₹2800/রাত",
+        rustic_farmhouse_description: "খাঁটি গ্রামের অভিজ্ঞতা।",
+        book_now_button: "এখন বুক করুন",
+        book_homestay_modal_title: "হোমস্টে বুক করুন",
+        check_in_date_label: "চেক-ইন তারিখ:",
+        check_out_date_label: "চেক-আউট তারিখ:",
+        number_of_guests_label: "অতিথির সংখ্যা:",
+        estimated_price_label: "আনুমানিক মূল্য:",
+        select_payment_method_label: "পেমেন্ট পদ্ধতি নির্বাচন করুন:",
+        card_payment_option: "কার্ড পেমেন্ট",
+        upi_option: "ইউপিআই",
+        netbanking_option: "নেট ব্যাংকিং",
+        confirm_booking_button: "বুকিং নিশ্চিত করুন",
+        make_payment_button: "পেমেন্ট করুন",
+        booking_confirmed_alert: (title, price) => `${title} এর জন্য বুকিং নিশ্চিত হয়েছে! আনুমানিক মূল্য: ₹${price}। অনুগ্রহ করে পেমেন্ট করুন।`,
+        booking_error_alert: "বুকিং নিশ্চিত করতে ত্রুটি হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+        fill_details_alert: "অনুগ্রহ করে সঠিকভাবে সমস্ত বুকিং বিবরণ পূরণ করুন (বৈধ তারিখ এবং অতিথি সহ)।",
+        payment_successful_alert: (title, checkIn, checkOut, guests, method) => `${title} এর জন্য আপনার বুকিং এর পেমেন্ট ${checkIn} থেকে ${checkOut} পর্যন্ত ${guests} জন অতিথির জন্য ${method} এর মাধ্যমে সফল হয়েছে!\nআপনার বুকিং এর জন্য ধন্যবাদ!`,
+        payment_error_alert: "অনুগ্রহ করে আপনার বুকিং বিবরণ নিশ্চিত করুন এবং পেমেন্ট করার আগে একটি বৈধ মূল্য গণনা করা হয়েছে তা নিশ্চিত করুন।"
+      },
+      hi: {
+        homestay_listings_title: "होमस्टे लिस्टिंग",
+        homestay_listings_heading: "🏡 होमस्टे लिस्टिंग",
+        select_language: "भाषा चुनें:",
+        lang_en: "अंग्रेज़ी",
+        lang_bn: "बंगाली",
+        lang_hi: "हिंदी",
+        lang_ta: "तमिल",
+        lang_mr: "मराठी",
+        green_valley_homestay_title: "ग्रीन वैली होमस्टे",
+        himachal_pradesh_location: "📍 हिमाचल प्रदेश",
+        price_per_night_3500: "₹3500/रात",
+        green_valley_description: "पहाड़ी दृश्यों के साथ आरामदायक होमस्टे।",
+        riverside_cottage_title: "रिवरसाइड कॉटेज",
+        kerala_location: "📍केरल",
+        price_per_night_4200: "₹4200/रात",
+        riverside_cottage_description: "नदी के किनारे आरामदायक कॉटेज।",
+        rustic_farmhouse_title: "देहाती फार्महाउस",
+        punjab_location: "📍 पंजाब",
+        price_per_night_2800: "₹2800/रात",
+        rustic_farmhouse_description: "प्रामाणिक ग्रामीण अनुभव।",
+        book_now_button: "अभी बुक करें",
+        book_homestay_modal_title: "होमस्टे बुक करें",
+        check_in_date_label: "चेक-इन तिथि:",
+        check_out_date_label: "चेक-आउट तिथि:",
+        number_of_guests_label: "अतिथियों की संख्या:",
+        estimated_price_label: "अनुमानित मूल्य:",
+        select_payment_method_label: "भुगतान विधि चुनें:",
+        card_payment_option: "कार्ड भुगतान",
+        upi_option: "यूपीआई",
+        netbanking_option: "नेट बैंकिंग",
+        confirm_booking_button: "बुकिंग की पुष्टि करें",
+        make_payment_button: "भुगतान करें",
+        booking_confirmed_alert: (title, price) => `${title} के लिए बुकिंग की पुष्टि हो गई है! अनुमानित मूल्य: ₹${price}। कृपया भुगतान के लिए आगे बढ़ें।`,
+        booking_error_alert: "बुकिंग की पुष्टि करने में त्रुटि। कृपया फिर से प्रयास करें।",
+        fill_details_alert: "कृपया सभी बुकिंग विवरण सही ढंग से भरें (वैध तिथियां और अतिथि सहित)।",
+        payment_successful_alert: (title, checkIn, checkOut, guests, method) => `${checkIn} से ${checkOut} तक ${guests} मेहमानों के लिए आपके ${title} बुकिंग का भुगतान ${method} के माध्यम से सफल रहा!\nआपकी बुकिंग के लिए धन्यवाद!`,
+        payment_error_alert: "कृपया अपनी बुकिंग विवरण की पुष्टि करें और सुनिश्चित करें कि भुगतान करने से पहले एक वैध मूल्य की गणना की गई है।"
+      },
+      ta: {
+        homestay_listings_title: "வீட்டுத் தங்குமிடங்கள்",
+        homestay_listings_heading: "🏡 வீட்டுத் தங்குமிடங்கள்",
+        select_language: "மொழியைத் தேர்ந்தெடுக்கவும்:",
+        lang_en: "ஆங்கிலம்",
+        lang_bn: "பெங்காலி",
+        lang_hi: "ஹிந்தி",
+        lang_ta: "தமிழ்",
+        lang_mr: "மராத்தி",
+        green_valley_homestay_title: "பசுமை பள்ளத்தாக்கு வீட்டுத் தங்குமிடம்",
+        himachal_pradesh_location: "📍 இமாச்சலப் பிரதேசம்",
+        price_per_night_3500: "₹3500/இரவு",
+        green_valley_description: "மலைக் காட்சிகளுடன் கூடிய வசதியான வீட்டுத் தங்குமிடம்.",
+        riverside_cottage_title: "நதிக்கரை குடிசை",
+        kerala_location: "📍கேரளா",
+        price_per_night_4200: "₹4200/இரவு",
+        riverside_cottage_description: "நதிக்கரையில் ஓய்வெடுக்கும் குடிசை.",
+        rustic_farmhouse_title: "கிராமப்புற பண்ணை வீடு",
+        punjab_location: "📍 பஞ்சாப்",
+        price_per_night_2800: "₹2800/இரவு",
+        rustic_farmhouse_description: "உண்மையான கிராம அனுபவம்.",
+        book_now_button: "இப்போதே முன்பதிவு செய்யுங்கள்",
+        book_homestay_modal_title: "வீட்டுத் தங்குமிடத்தை முன்பதிவு செய்யுங்கள்",
+        check_in_date_label: "செக்-இன் தேதி:",
+        check_out_date_label: "செக்-அவுட் தேதி:",
+        number_of_guests_label: "விருந்தினர்களின் எண்ணிக்கை:",
+        estimated_price_label: "மதிப்பிடப்பட்ட விலை:",
+        select_payment_method_label: "கட்டண முறையைத் தேர்ந்தெடுக்கவும்:",
+        card_payment_option: "கார்டு கட்டணம்",
+        upi_option: "UPI",
+        netbanking_option: "நிகர வங்கி",
+        confirm_booking_button: "முன்பதிவை உறுதிப்படுத்தவும்",
+        make_payment_button: "கட்டணம் செலுத்தவும்",
+        booking_confirmed_alert: (title, price) => `${title}க்கான முன்பதிவு உறுதிப்படுத்தப்பட்டது! மதிப்பிடப்பட்ட விலை: ₹${price}. கட்டணம் செலுத்த தொடரவும்.`,
+        booking_error_alert: "முன்பதிவை உறுதிப்படுத்துவதில் பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.",
+        fill_details_alert: "தயவுசெய்து அனைத்து முன்பதிவு விவரங்களையும் சரியாக நிரப்பவும் (சரியான தேதிகள் மற்றும் விருந்தினர்கள் உட்பட).",
+        payment_successful_alert: (title, checkIn, checkOut, guests, method) => `உங்கள் ${title} முன்பதிவுக்கான கட்டணம் ${checkIn} முதல் ${checkOut} வரை ${guests} விருந்தினர்களுக்கு ${method} மூலம் வெற்றிகரமாக செலுத்தப்பட்டது!\nஉங்கள் முன்பதிவுக்கு நன்றி!`,
+        payment_error_alert: "கட்டணம் செலுத்தும் முன் உங்கள் முன்பதிவு விவரங்களை உறுதிப்படுத்தி, சரியான விலை கணக்கிடப்பட்டுள்ளதா என்பதை உறுதிப்படுத்தவும்."
+      },
+      mr: {
+        homestay_listings_title: "होमस्टे सूची",
+        homestay_listings_heading: "🏡 होमस्टे सूची",
+        select_language: "भाषा निवडा:",
+        lang_en: "इंग्रजी",
+        lang_bn: "बंगाली",
+        lang_hi: "हिंदी",
+        lang_ta: "तमिळ",
+        lang_mr: "मराठी",
+        green_valley_homestay_title: "ग्रीन व्हॅली होमस्टे",
+        himachal_pradesh_location: "📍 हिमाचल प्रदेश",
+        price_per_night_3500: "₹3500/रात्र",
+        green_valley_description: "डोंगराच्या दृश्यांसह आरामदायक होमस्टे.",
+        riverside_cottage_title: "नदीकाठचे कॉटेज",
+        kerala_location: "📍केरळ",
+        price_per_night_4200: "₹4200/रात्र",
+        riverside_cottage_description: "नदीजवळ आरामदायी कॉटेज.",
+        rustic_farmhouse_title: "ग्राम्य फार्महाऊस",
+        punjab_location: "📍 पंजाब",
+        price_per_night_2800: "₹2800/रात्र",
+        rustic_farmhouse_description: "खरा ग्रामीण अनुभव.",
+        book_now_button: "आता बुक करा",
+        book_homestay_modal_title: "होमस्टे बुक करा",
+        check_in_date_label: "चेक-इन तारीख:",
+        check_out_date_label: "चेक-आउट तारीख:",
+        number_of_guests_label: "अतिथींची संख्या:",
+        estimated_price_label: "अंदाजित किंमत:",
+        select_payment_method_label: "पेमेंट पद्धत निवडा:",
+        card_payment_option: "कार्ड पेमेंट",
+        upi_option: "यूपीआय",
+        netbanking_option: "नेट बँकिंग",
+        confirm_booking_button: "बुकिंगची पुष्टी करा",
+        make_payment_button: "पेमेंट करा",
+        booking_confirmed_alert: (title, price) => `${title} साठी बुकिंगची पुष्टी झाली आहे! अंदाजित किंमत: ₹${price}. कृपया पेमेंटसाठी पुढे जा.`,
+        booking_error_alert: "बुकिंगची पुष्टी करताना एरर आली. कृपया पुन्हा प्रयत्न करा.",
+        fill_details_alert: "कृपया सर्व बुकिंग तपशील (वैध तारखा आणि अतिथींसह) योग्यरित्या भरा.",
+        payment_successful_alert: (title, checkIn, checkOut, guests, method) => `${checkIn} पासून ${checkOut} पर्यंत ${guests} अतिथींसाठी तुमच्या ${title} बुकिंगचे पेमेंट ${method} द्वारे यशस्वी झाले आहे!\nतुमच्या बुकिंगसाठी धन्यवाद!`,
+        payment_error_alert: "कृपया तुमच्या बुकिंग तपशिलांची पुष्टी करा आणि पेमेंट करण्यापूर्वी वैध किंमत मोजली गेली आहे याची खात्री करा."
+      }
+    };
+
+    let currentLanguage = localStorage.getItem('language') || 'en';
+
+    function changeLanguage() {
+      const language = document.getElementById('language').value;
+      localStorage.setItem('language', language);
+      document.documentElement.setAttribute('lang', language);
+      currentLanguage = language;
+      updateContent();
+    }
+
+    function updateContent() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        // Handle function-based translations for alerts
+        if (typeof translations[currentLanguage][key] === 'function') {
+          // This case should be handled where the alert is triggered, not here
+          // This loop is for static text content
+        } else {
+          el.textContent = translations[currentLanguage][key] || translations['en'][key];
+        }
+      });
+      // Update the modal title separately, as it uses innerText which might differ from textContent in some cases
+      if (currentHomestay.title) { // Check if a homestay is currently selected
+        document.getElementById('modalHomestayTitle').textContent = (translations[currentLanguage]['book_homestay_modal_title'] || translations['en']['book_homestay_modal_title']) + ` ${currentHomestay.title}`;
+      } else {
+        document.getElementById('modalHomestayTitle').textContent = translations[currentLanguage]['book_homestay_modal_title'] || translations['en']['book_homestay_modal_title'];
+      }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const bookNowButtons = document.querySelectorAll('.book-now-btn');
+      const bookingModalOverlay = document.getElementById('bookingModalOverlay');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const homestayBookingForm = document.getElementById('homestayBookingForm');
+      const modalHomestayTitle = document.getElementById('modalHomestayTitle');
+      const checkInDateInput = document.getElementById('checkInDate');
+      const checkOutDateInput = document.getElementById('checkOutDate');
+      const numberOfGuestsInput = document.getElementById('numberOfGuests');
+      const estimatedPriceDisplayModal = document.getElementById('estimatedPriceDisplayModal');
+      const priceAmountModal = document.getElementById('priceAmountModal');
+      const makePaymentBtnModal = document.getElementById('makePaymentBtnModal');
+
+      let currentHomestay = {}; // To store the details of the currently selected homestay
+
+      // Open modal when "Book Now" is clicked
+      bookNowButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+          const hotelCard = event.target.closest('.hotel-card');
+          currentHomestay = {
+            id: hotelCard.dataset.homestayId,
+            title: hotelCard.querySelector('.hotel-title').textContent,
+            location: hotelCard.querySelector('.location').textContent,
+            pricePerNight: parseFloat(hotelCard.dataset.pricePerNight),
+            imageUrl: hotelCard.querySelector('.hotel-images img').src
+          };
+
+          // Update modal title with selected homestay's title
+          modalHomestayTitle.textContent = (translations[currentLanguage]['book_homestay_modal_title'] || translations['en']['book_homestay_modal_title']) + ` ${currentHomestay.title}`;
+          bookingModalOverlay.style.display = 'flex'; // Show modal
+          resetBookingForm(); // Reset form fields on opening
+        });
+      });
+
+      // Close modal
+      closeModalBtn.addEventListener('click', () => {
+        bookingModalOverlay.style.display = 'none'; // Hide modal
+      });
+      // Close modal if clicked outside content
+      bookingModalOverlay.addEventListener('click', (event) => {
+        if (event.target === bookingModalOverlay) {
+          bookingModalOverlay.style.display = 'none';
+        }
+      });
+      // Function to calculate estimated total price
+      function calculateTotalPrice() {
+        const checkIn = new Date(checkInDateInput.value);
+        const checkOut = new Date(checkOutDateInput.value);
+        const guests = parseInt(numberOfGuestsInput.value);
+
+        if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime()) || checkOut <= checkIn || guests <= 0 || isNaN(guests)) {
+          estimatedPriceDisplayModal.style.display = 'none';
+          return 0;
+        }
+
+        const timeDiff = Math.abs(checkOut.getTime() - checkIn.getTime());
+        const numberOfNights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        const totalPrice = numberOfNights * currentHomestay.pricePerNight * guests;
+        // Simple logic: guests factor into price
+
+        priceAmountModal.textContent = `₹${totalPrice.toFixed(2)}`;
+        estimatedPriceDisplayModal.style.display = 'block';
+        return totalPrice;
+      }
+
+      // Recalculate price on date or guest input change
+      checkInDateInput.addEventListener('change', calculateTotalPrice);
+      checkOutDateInput.addEventListener('change', calculateTotalPrice);
+      numberOfGuestsInput.addEventListener('input', calculateTotalPrice);
+
+      // Handle "Confirm Booking" button click (form submission)
+      homestayBookingForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const checkInDate = checkInDateInput.value;
+        const checkOutDate = checkOutDateInput.value;
+        const numberOfGuests = parseInt(numberOfGuestsInput.value);
+        const totalPrice = calculateTotalPrice(); // Ensure price is calculated and displayed
+
+        if (checkInDate && checkOutDate && numberOfGuests && totalPrice > 0) {
+          const bookingData = {
+            homestayId: currentHomestay.id,
+            homestayTitle: currentHomestay.title,
+            location: currentHomestay.location,
+            pricePerNight: currentHomestay.pricePerNight,
+            imageUrl: currentHomestay.imageUrl,
+            checkInDate: checkInDate,
+            checkOutDate: checkOutDate,
+            numberOfGuests: numberOfGuests,
+            totalPrice: totalPrice,
+            bookingStatus: 'Confirmed', // Initial status
+            timestamp: new Date().toISOString()
+          };
+          // Save booking data to Firebase
+          database.ref('homestayBookings').push(bookingData)
+            .then(() => {
+              console.log("Homestay booking data saved to Firebase successfully!");
+              alert(translations[currentLanguage]['booking_confirmed_alert'](currentHomestay.title, totalPrice.toFixed(2)));
+            })
+            .catch((error) => {
+              console.error("Error saving homestay booking data to Firebase: ", error);
+              alert(translations[currentLanguage]['booking_error_alert']);
+            });
+        } else {
+          alert(translations[currentLanguage]['fill_details_alert']);
+          estimatedPriceDisplayModal.style.display = 'none';
+        }
+      });
+      // Handle "Make Payment" button click
+      makePaymentBtnModal.addEventListener('click', function() {
+        const checkInDate = checkInDateInput.value;
+        const checkOutDate = checkOutDateInput.value;
+        const numberOfGuests = parseInt(numberOfGuestsInput.value);
+        const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+        const currentTotalAmount = priceAmountModal.textContent; // Get the displayed total price
+
+        if (checkInDate && checkOutDate && numberOfGuests && currentTotalAmount && currentTotalAmount !== '₹0.00') {
+          alert(translations[currentLanguage]['payment_successful_alert'](currentHomestay.title, checkInDate, checkOutDate, numberOfGuests, selectedPaymentMethod));
+          bookingModalOverlay.style.display = 'none'; // Close modal after successful payment
+        } else {
+          alert(translations[currentLanguage]['payment_error_alert']);
+        }
+      });
+
+      function resetBookingForm() {
+        homestayBookingForm.reset(); // Resets all form fields
+        estimatedPriceDisplayModal.style.display = 'none';
+        priceAmountModal.textContent = '';
+        // Set today's date as min for check-in
+        const today = new Date().toISOString().split('T')[0];
+        checkInDateInput.min = today;
+        checkOutDateInput.min = today;
+      }
+
+      // Initialize min date for inputs
+      resetBookingForm();
+
+      // Set the dropdown to the currently stored language and update content on page load
+      document.getElementById('language').value = currentLanguage;
+      document.documentElement.setAttribute('lang', currentLanguage);
+      updateContent();
+    });
+  </script>
+</body>
+</html>

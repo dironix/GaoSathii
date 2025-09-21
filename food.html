@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title data-i18n="food_page_title">Village Food</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #fff7ed url('https://media.istockphoto.com/id/922783734/photo/assorted-indian-recipes-food-various.jpg?s=612x612&w=0&k=20&c=p8DepvymWfC5j7c6En2UsQ6sUM794SQMwceeBW3yQ9M=') no-repeat center center/cover;
+      background-attachment: fixed; /* Ensures background stays fixed during scroll */
+      min-height: 100vh;
+      display: flex; /* Use flexbox to center content vertically */
+      align-items: center; /* Center vertically */
+      justify-content: center; /* Center horizontally */
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.95);
+      margin: 50px auto;
+      max-width: 950px;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      text-align: center;
+      color: darkgreen;
+      margin-bottom: 40px;
+      font-size: 2.5em;
+    }
+
+    .food-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .food-item {
+      background: white;
+      padding: 20px; /* Increased padding */
+      border-radius: 8px;
+      border-left: 5px solid darkred;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s ease; /* Smooth hover effect */
+    }
+
+    .food-item:hover {
+      transform: translateY(-5px); /* Lift effect on hover */
+    }
+
+    .food-item img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 15px; /* Increased margin */
+    }
+
+    .food-item h3 {
+      margin: 10px 0 10px; /* Adjusted margin */
+      color: brown;
+      font-size: 1.5em;
+      text-align: center;
+    }
+
+    .food-item p {
+      font-size: 1em; /* Adjusted font size */
+      text-align: center;
+      color: #555; /* Slightly darker text for readability */
+      line-height: 1.6;
+    }
+
+    .booking {
+      margin-top: 50px;
+      background: #fdf5e6; /* Lighter wheat color */
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for booking section */
+    }
+
+    .booking h2 {
+      margin-top: 0;
+      color: brown;
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 25px;
+    }
+
+    .booking form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .booking input,
+    .booking textarea {
+      margin-bottom: 18px; /* Increased margin */
+      padding: 12px; /* Increased padding */
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    .booking textarea {
+        resize: vertical; /* Allow vertical resizing */
+        min-height: 80px;
+    }
+
+    .booking button {
+      background-color: darkgreen;
+      color: white;
+      padding: 15px; /* Increased padding */
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1em; /* Larger font */
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .booking button:hover {
+      background-color: #8B0000; /* Darker red */
+    }
+
+    .back-link {
+      display: block; /* Changed to block for centering */
+      margin: 30px auto 0 auto; /* Centered with auto margins */
+      text-align: center;
+      text-decoration: none;
+      color: #8B0000;
+      font-weight: bold;
+      font-size: 1.1em;
+      transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+      color: navy;
+    }
+
+    /* Language specific font families, for consistent look */
+    [lang="bn"] { font-family: 'Noto Sans Bengali', sans-serif; }
+    [lang="hi"] { font-family: 'Noto Sans Devanagari', sans-serif; }
+    [lang="ta"] { font-family: 'Noto Sans Tamil', sans-serif; }
+    [lang="mr"] { font-family: 'Noto Sans', sans-serif; } /* Noto Sans is suitable for Marathi */
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1 data-i18n="food_heading">Village Food Experience</h1>
+
+    <div class="food-list">
+      <div class="food-item">
+        <img src="https://www.shutterstock.com/image-photo/soft-flat-bread-made-pearl-600nw-2343046621.jpg" alt="Millet Roti">
+        <h3 data-i18n="food_millet_roti_title">🌾 Millet Roti</h3>
+        <p data-i18n="food_millet_roti_description">Freshly baked in clay ovens, made from native grains and topped with homemade butter.</p>
+      </div>
+      <div class="food-item">
+        <img src="https://shwetainthekitchen.com/wp-content/uploads/2023/03/mixed-vegetable-curry.jpg" alt="Farm Vegetable Curry">
+        <h3 data-i18n="food_veg_curry_title">🥘 Farm Vegetable Curry</h3>
+        <p data-i18n="food_veg_curry_description">Seasonal vegetables slow-cooked with homemade spice blends for a rustic and rich taste.</p>
+      </div>
+      <div class="food-item">
+        <img src="https://content.jdmagicbox.com/comp/chittoor/q4/9999p8578.8578.211023164003.a2q4/catalogue/the-village-food-park-chittoor-inexpensive-restaurants-below-rs-500--4hkemcqa8v.jpg" alt="Village Thali">
+        <h3 data-i18n="food_village_thali_title">🍱 Village Thali</h3>
+        <p data-i18n="food_village_thali_description">A full traditional meal with dal, roti, rice, chutney, vegetables, and dessert — served on banana leaves.</p>
+      </div>
+      <div class="food-item">
+        <img src="https://media.istockphoto.com/id/1054228718/photo/indian-sweets-in-a-plate-includes-gulab-jamun-rasgulla-kaju-katli-morichoor-bundi-laddu.jpg?s=612x612&w=0&k=20&c=hYWCXLaldKvhxdBa83M0RnUij7BCmhf-ywWdvyIXR40=" alt="Traditional Sweets">
+        <h3 data-i18n="food_sweets_title">🍬 Traditional Sweets</h3>
+        <p data-i18n="food_sweets_description">Jaggery laddus, banana halwa, coconut barfi — authentic desserts made from age-old village recipes.</p>
+      </div>
+    </div>
+
+    <div class="booking">
+      <h2 data-i18n="book_meal_heading">🍽 Book Your Village Meal</h2>
+      <form action="#" method="post">
+        <input type="text" name="name" placeholder="Your Name" data-i18n-placeholder="your_name_placeholder" required />
+        <input type="email" name="email" placeholder="Email Address" data-i18n-placeholder="email_address_placeholder" required />
+        <textarea name="message" rows="4" placeholder="Preferred date/time or special requests" data-i18n-placeholder="special_requests_placeholder"></textarea>
+        <button type="submit" data-i18n="book_now_button">Book Now</button>
+      </form>
+    </div>
+
+    <a class="back-link" href="InfosysProject.html" data-i18n="back_to_home">← Back to Home</a>
+  </div>
+
+  <script>
+    // Define the translations object (copy from your InfosysProject.html or a centralized file)
+    const translations = {
+      en: {
+        food_page_title: "Village Food",
+        food_heading: "Village Food Experience",
+        food_millet_roti_title: "🌾 Millet Roti",
+        food_millet_roti_description: "Freshly baked in clay ovens, made from native grains and topped with homemade butter.",
+        food_veg_curry_title: "🥘 Farm Vegetable Curry",
+        food_veg_curry_description: "Seasonal vegetables slow-cooked with homemade spice blends for a rustic and rich taste.",
+        food_village_thali_title: "🍱 Village Thali",
+        food_village_thali_description: "A full traditional meal with dal, roti, rice, chutney, vegetables, and dessert — served on banana leaves.",
+        food_sweets_title: "🍬 Traditional Sweets",
+        food_sweets_description: "Jaggery laddus, banana halwa, coconut barfi — authentic desserts made from age-old village recipes.",
+        book_meal_heading: "🍽 Book Your Village Meal",
+        your_name_placeholder: "Your Name",
+        email_address_placeholder: "Email Address",
+        special_requests_placeholder: "Preferred date/time or special requests",
+        book_now_button: "Book Now",
+        back_to_home: "← Back to Home"
+      },
+      bn: {
+        food_page_title: "গ্রামের খাবার",
+        food_heading: "গ্রামের খাবারের অভিজ্ঞতা",
+        food_millet_roti_title: "🌾 বাজরার রুটি",
+        food_millet_roti_description: "মাটির ওভেনে তাজা বেক করা, স্থানীয় শস্য থেকে তৈরি এবং ঘরে তৈরি মাখন দিয়ে পরিবেশিত।",
+        food_veg_curry_title: "🥘 খামারের সবজির তরকারি",
+        food_veg_curry_description: "মৌসুমী সবজি ঘরে তৈরি মশলা দিয়ে ধীরে ধীরে রান্না করা, একটি গ্রামীণ এবং সমৃদ্ধ স্বাদের জন্য।",
+        food_village_thali_title: "🍱 গ্রামের থালি",
+        food_village_thali_description: "ডাল, রুটি, ভাত, চাটনি, সবজি এবং মিষ্টি সহ একটি সম্পূর্ণ ঐতিহ্যবাহী খাবার — কলার পাতায় পরিবেশিত।",
+        food_sweets_title: "🍬 ঐতিহ্যবাহী মিষ্টি",
+        food_sweets_description: "গুড়ের লাড্ডু, কলার হালুয়া, নারকেলের বরফি — প্রাচীন গ্রামের রেসিপি থেকে তৈরি খাঁটি মিষ্টি।",
+        book_meal_heading: "🍽 আপনার গ্রামের খাবার বুক করুন",
+        your_name_placeholder: "আপনার নাম",
+        email_address_placeholder: "ইমেইল ঠিকানা",
+        special_requests_placeholder: "পছন্দের তারিখ/সময় বা বিশেষ অনুরোধ",
+        book_now_button: "এখনই বুক করুন",
+        back_to_home: "← হোমে ফিরে যান"
+      },
+      hi: {
+        food_page_title: "गाँव का खाना",
+        food_heading: "गाँव के खाने का अनुभव",
+        food_millet_roti_title: "🌾 बाजरे की रोटी",
+        food_millet_roti_description: "मिट्टी के ओवन में ताज़ी बनी हुई, देसी अनाज से बनी और घर के बने मक्खन के साथ परोसी जाती है।",
+        food_veg_curry_title: "🥘 खेत की सब्जी की करी",
+        food_veg_curry_description: "देसी मसालों के साथ धीमी आंच पर पकी मौसमी सब्जियां, एक देहाती और समृद्ध स्वाद के लिए।",
+        food_village_thali_title: "🍱 गाँव की थाली",
+        food_village_thali_description: "दाल, रोटी, चावल, चटनी, सब्जियां और मिठाई के साथ एक पूरा पारंपरिक भोजन — केले के पत्तों पर परोसा जाता है।",
+        food_sweets_title: "🍬 पारंपरिक मिठाइयाँ",
+        food_sweets_description: "गुड़ के लड्डू, केले का हलवा, नारियल की बर्फी — सदियों पुरानी गाँव की रेसिपी से बनी प्रामाणिक मिठाइयाँ।",
+        book_meal_heading: "🍽 अपना गाँव का भोजन बुक करें",
+        your_name_placeholder: "आपका नाम",
+        email_address_placeholder: "ईमेल पता",
+        special_requests_placeholder: "पसंदीदा तिथि/समय या विशेष अनुरोध",
+        book_now_button: "अभी बुक करें",
+        back_to_home: "← होम पर वापस"
+      },
+      ta: {
+        food_page_title: "கிராம உணவு",
+        food_heading: "கிராம உணவு அனுபவம்",
+        food_millet_roti_title: "🌾 தினை ரொட்டி",
+        food_millet_roti_description: "களிமண் அடுப்பில் புதிதாக சுடப்பட்டது, உள்ளூர் தானியங்களிலிருந்து தயாரிக்கப்பட்டு, வீட்டில் செய்த வெண்ணெயுடன் பரிமாறப்படுகிறது.",
+        food_veg_curry_title: "🥘 பண்ணை காய்கறி கறி",
+        food_veg_curry_description: "பருவகால காய்கறிகள் வீட்டில் செய்த மசாலா கலவைகளுடன் மெதுவாக சமைக்கப்பட்டு, ஒரு கிராமப்புற மற்றும் பணக்கார சுவைக்கு.",
+        food_village_thali_title: "🍱 கிராமிய உணவு",
+        food_village_thali_description: "பருப்பு, ரொட்டி, அரிசி, சட்னி, காய்கறிகள் மற்றும் இனிப்புடன் ஒரு முழுமையான பாரம்பரிய உணவு — வாழை இலைகளில் பரிமாறப்படுகிறது.",
+        food_sweets_title: "🍬 பாரம்பரிய இனிப்புகள்",
+        food_sweets_description: "வெல்ல லட்டுகள், வாழைப்பழ அல்வா, தேங்காய் பர்ஃபி — பழங்கால கிராம சமையல் குறிப்புகளிலிருந்து தயாரிக்கப்பட்ட உண்மையான இனிப்புகள்.",
+        book_meal_heading: "🍽 உங்கள் கிராம உணவை முன்பதிவு செய்யுங்கள்",
+        your_name_placeholder: "உங்கள் பெயர்",
+        email_address_placeholder: "மின்னஞ்சல் முகவரி",
+        special_requests_placeholder: "விரும்பிய தேதி/நேரம் அல்லது சிறப்பு கோரிக்கைகள்",
+        book_now_button: "இப்போதே முன்பதிவு செய்யுங்கள்",
+        back_to_home: "← முகப்புக்கு திரும்பு"
+      },
+      mr: {
+        food_page_title: "गावचे जेवण",
+        food_heading: "गावच्या जेवणाचा अनुभव",
+        food_millet_roti_title: "🌾 बाजरीची भाकरी",
+        food_millet_roti_description: "मातीच्या चुलीत ताजे भाजलेले, स्थानिक धान्यांपासून बनवलेले आणि घरगुती लोण्यासोबत. ",
+        food_veg_curry_title: "🥘 शेतातली भाजी",
+        food_veg_curry_description: "घरगुती मसाल्यांच्या मिश्रणाने हळू शिजवलेल्या हंगामी भाज्या, एक ग्रामीण आणि समृद्ध चवसाठी.",
+        food_village_thali_title: "🍱 गावची थाळी",
+        food_village_thali_description: "डाळ, भाकरी, भात, चटणी, भाज्या आणि मिठाईसह एक पूर्ण पारंपरिक जेवण — केळीच्या पानांवर वाढलेले.",
+        food_sweets_title: "🍬 पारंपरिक मिठाई",
+        food_sweets_description: "गुळाचे लाडू, केळीचा हलवा, नारळाची बर्फी — जुन्या गावच्या पाककृतींमधून बनवलेली अस्सल मिठाई.",
+        book_meal_heading: "🍽 आपले गावचे जेवण बुक करा",
+        your_name_placeholder: "आपले नाव",
+        email_address_placeholder: "ईमेल पत्ता",
+        special_requests_placeholder: "पसंतीची तारीख/वेळ किंवा विशेष विनंत्या",
+        book_now_button: "आता बुक करा",
+        back_to_home: "← होमवर परत"
+      }
+    };
+
+    let currentLanguage = localStorage.getItem('language') || 'en';
+
+    function updateContent() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = translations[currentLanguage][key] || translations['en'][key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        el.placeholder = translations[currentLanguage][key] || translations['en'][key];
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.documentElement.setAttribute('lang', currentLanguage);
+      updateContent();
+    });
+  </script>
+</body>
+</html>

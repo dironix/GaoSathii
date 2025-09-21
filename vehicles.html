@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title data-i18n="vehicle_booking_title">Local Vehicle Booking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://png.pngtree.com/background/20250119/original/pngtree-the-village-road-on-a-sunny-summer-day-photo-picture-image_12572736.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      display: flex; /* Use flexbox for centering content */
+      align-items: center; /* Center vertically */
+      justify-content: center; /* Center horizontally */
+      min-height: 100vh; /* Ensure body takes full viewport height */
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 20px; /* Adjusted margin for better responsiveness */
+      padding: 30px;
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Added subtle shadow */
+    }
+
+    h1 {
+      text-align: center;
+      color: #ff8c00; /* Darker orange */
+      margin-bottom: 20px;
+      font-size: 2em;
+    }
+
+    p {
+      text-align: center;
+      color: #b8860b; /* Darker goldenrod */
+      margin-bottom: 30px;
+      font-size: 1.1em;
+      line-height: 1.5;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333; /* Darker label color */
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select {
+      padding: 10px;
+      border: 1px solid #87ceeb; /* Skyblue */
+      border-radius: 5px;
+      font-size: 16px;
+      width: calc(100% - 22px); /* Account for padding and border */
+      box-sizing: border-box; /* Include padding and border in element's total width and height */
+    }
+
+    .btn {
+      margin-top: 25px; /* Increased margin */
+      padding: 12px;
+      background-color: #6c7a89; /* Slategrey */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1em; /* Slightly larger font */
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #00008b; /* Darker blue */
+    }
+
+    .back-link {
+      display: block;
+      margin-top: 25px; /* Increased margin */
+      text-align: center;
+      text-decoration: none;
+      color: #8b0000; /* Darker red */
+      font-weight: bold;
+      font-size: 1.1em;
+      transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+      color: #0000ff; /* Blue on hover */
+    }
+
+    /* Language specific font families, for consistent look */
+    [lang="bn"] { font-family: 'Noto Sans Bengali', sans-serif; }
+    [lang="hi"] { font-family: 'Noto Sans Devanagari', sans-serif; }
+    [lang="ta"] { font-family: 'Noto Sans Tamil', sans-serif; }
+    [lang="mr"] { font-family: 'Noto Sans', sans-serif; } /* Noto Sans is suitable for Marathi */
+
+    /* Payment section styling */
+    .payment-options {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .payment-options label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-weight: normal;
+      color: #555;
+    }
+
+    .payment-options input[type="radio"] {
+      margin-right: 10px;
+      transform: scale(1.2); /* Slightly larger radio buttons */
+    }
+
+    .pay-btn {
+      background-color: #28a745; /* Green for payment */
+      margin-top: 20px;
+    }
+
+    .pay-btn:hover {
+      background-color: #218838; /* Darker green on hover */
+    }
+
+    .estimated-price {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 1.2em;
+      color: #333;
+      font-weight: bold;
+      display: none; /* Hidden by default, shown after confirmation */
+    }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <h1 data-i18n="vehicle_booking_heading">Book Your Local Vehicle</h1>
+    <p data-i18n="vehicle_booking_description">Need a ride for sightseeing or local travel? Book your vehicle below!</p>
+
+    <form id="vehicleBookingForm">
+      <label for="vehicle" data-i18n="select_vehicle_type">Select Vehicle Type:</label>
+      <select id="vehicle" name="vehicle">
+        <option value="" data-i18n="select_option_default">Select an option</option>
+        <option value="auto" data-i18n="vehicle_type_auto">Auto Rickshaw</option>
+        <option value="bike" data-i18n="vehicle_type_bike">Two-Wheeler</option>
+        <option value="sedan" data-i18n="vehicle_type_sedan">Sedan</option>
+        <option value="suv" data-i18n="vehicle_type_suv">SUV</option>
+        <option value="van" data-i18n="vehicle_type_van">Tour Van</option>
+      </select>
+
+      <label for="date" data-i18n="booking_date">Booking Date:</label>
+      <input type="date" id="date" name="date" required>
+
+      <label for="currentLocation" data-i18n="current_location">Current Location:</label>
+      <input type="text" id="currentLocation" name="currentLocation" placeholder="Enter current location" data-i18n-placeholder="enter_current_location_placeholder" required>
+
+      <label for="dropLocation" data-i18n="drop_location">Drop Location:</label>
+      <input type="text" id="dropLocation" name="dropLocation" placeholder="Enter drop location" data-i18n-placeholder="enter_drop_location_placeholder" required>
+
+      <button type="submit" class="btn" data-i18n="confirm_booking_btn">Confirm Booking</button>
+
+      <div id="estimatedPriceDisplay" class="estimated-price">
+        <span data-i18n="estimated_price_label">Estimated Price:</span> <span id="priceAmount"></span>
+      </div>
+
+      <div class="payment-options">
+        <label data-i18n="payment_method_label">Select Payment Method:</label>
+        <label>
+          <input type="radio" name="paymentMethod" value="card" checked> <span data-i18n="payment_card">Card Payment</span>
+        </label>
+        <label>
+          <input type="radio" name="paymentMethod" value="upi"> <span data-i18n="payment_upi">UPI</span>
+        </label>
+        <label>
+          <input type="radio" name="paymentMethod" value="netbanking"> <span data-i18n="payment_netbanking">Net Banking</span>
+        </label>
+        <button type="button" class="btn pay-btn" id="makePaymentBtn" data-i18n="make_payment_btn">Make Payment</button>
+      </div>
+    </form>
+
+    <a class="back-link" href="InfosysProject.html" data-i18n="back_to_services">← Back to Services</a>
+  </div>
+
+  <script>
+    // Define the translations object (copy from your InfosysProject.html or a centralized file)
+    const translations = {
+      en: {
+        vehicle_booking_title: "Local Vehicle Booking",
+        vehicle_booking_heading: "Book Your Local Vehicle",
+        vehicle_booking_description: "Need a ride for sightseeing or local travel? Book your vehicle below!",
+        select_vehicle_type: "Select Vehicle Type:",
+        select_option_default: "Select an option",
+        vehicle_type_auto: "Auto Rickshaw",
+        vehicle_type_bike: "Two-Wheeler",
+        vehicle_type_sedan: "Sedan",
+        vehicle_type_suv: "SUV",
+        vehicle_type_van: "Tour Van",
+        booking_date: "Booking Date:",
+        current_location: "Current Location:",
+        enter_current_location_placeholder: "Enter current location",
+        drop_location: "Drop Location:",
+        enter_drop_location_placeholder: "Enter drop location",
+        confirm_booking_btn: "Confirm Booking",
+        estimated_price_label: "Estimated Price:",
+        payment_method_label: "Select Payment Method:",
+        payment_card: "Card Payment",
+        payment_upi: "UPI",
+        payment_netbanking: "Net Banking",
+        make_payment_btn: "Make Payment",
+        back_to_services: "← Back to Services",
+        booking_confirmed_alert: "Booking details confirmed! Estimated Price: ₹{price}. Please proceed to payment.",
+        payment_success_alert: "Payment for your {vehicle} booking on {date} from {current} to {drop} via {method} is successful!\nThank you for your booking!",
+        fill_all_details_alert: "Please fill in all booking details before proceeding."
+      },
+      bn: {
+        vehicle_booking_title: "স্থানীয় যানবাহন বুকিং",
+        vehicle_booking_heading: "আপনার স্থানীয় যানবাহন বুক করুন",
+        vehicle_booking_description: "দর্শনীয় স্থান বা স্থানীয় ভ্রমণের জন্য একটি রাইড প্রয়োজন? নিচে আপনার যানবাহন বুক করুন!",
+        select_vehicle_type: "যানবাহনের প্রকার নির্বাচন করুন:",
+        select_option_default: "একটি বিকল্প নির্বাচন করুন",
+        vehicle_type_auto: "অটো রিকশা",
+        vehicle_type_bike: "দু'চাকা",
+        vehicle_type_sedan: "সেডান",
+        vehicle_type_suv: "এসইউভি",
+        vehicle_type_van: "ট্যুর ভ্যান",
+        booking_date: "বুকিং তারিখ:",
+        current_location: "বর্তমান অবস্থান:",
+        enter_current_location_placeholder: "বর্তমান অবস্থান লিখুন",
+        drop_location: "ড্রপ অবস্থান:",
+        enter_drop_location_placeholder: "ড্রপ অবস্থান লিখুন",
+        confirm_booking_btn: "বুকিং নিশ্চিত করুন",
+        estimated_price_label: "আনুমানিক মূল্য:",
+        payment_method_label: "পেমেন্ট পদ্ধতি নির্বাচন করুন:",
+        payment_card: "কার্ড পেমেন্ট",
+        payment_upi: "ইউপিআই",
+        payment_netbanking: "নেট ব্যাংকিং",
+        make_payment_btn: "পেমেন্ট করুন",
+        back_to_services: "← পরিষেবাতে ফিরে যান",
+        booking_confirmed_alert: "বুকিং বিবরণ নিশ্চিত! আনুমানিক মূল্য: ₹{price}. অনুগ্রহ করে পেমেন্ট করুন।",
+        payment_success_alert: "আপনার {date} তারিখে {current} থেকে {drop} পর্যন্ত {vehicle} বুকিং এর জন্য {method} এর মাধ্যমে পেমেন্ট সফল হয়েছে!\nআপনার বুকিং এর জন্য ধন্যবাদ!",
+        fill_all_details_alert: "অনুগ্রহ করে সমস্ত বুকিং বিবরণ পূরণ করুন।"
+      },
+      hi: {
+        vehicle_booking_title: "स्थानीय वाहन बुकिंग",
+        vehicle_booking_heading: "अपना स्थानीय वाहन बुक करें",
+        vehicle_booking_description: "घूमने या स्थानीय यात्रा के लिए सवारी चाहिए? अपना वाहन नीचे बुक करें!",
+        select_vehicle_type: "वाहन का प्रकार चुनें:",
+        select_option_default: "एक विकल्प चुनें",
+        vehicle_type_auto: "ऑटो रिक्शा",
+        vehicle_type_bike: "दोपहिया वाहन",
+        vehicle_type_sedan: "सेडान",
+        vehicle_type_suv: "एसयूवी",
+        vehicle_type_van: "टूर वैन",
+        booking_date: "बुकिंग की तारीख:",
+        current_location: "वर्तमान स्थान:",
+        enter_current_location_placeholder: "वर्तमान स्थान दर्ज करें",
+        drop_location: "ड्रॉप स्थान:",
+        enter_drop_location_placeholder: "ड्रॉप स्थान दर्ज करें",
+        confirm_booking_btn: "बुकिंग की पुष्टि करें",
+        estimated_price_label: "अनुमानित मूल्य:",
+        payment_method_label: "भुगतान विधि चुनें:",
+        payment_card: "कार्ड से भुगतान",
+        payment_upi: "यूपीआई",
+        payment_netbanking: "नेट बैंकिंग",
+        make_payment_btn: "भुगतान करें",
+        back_to_services: "← सेवाओं पर वापस",
+        booking_confirmed_alert: "बुकिंग विवरण की पुष्टि हुई! अनुमानित मूल्य: ₹{price}. कृपया भुगतान के लिए आगे बढ़ें।",
+        payment_success_alert: "आपकी {date} को {current} से {drop} तक की {vehicle} बुकिंग का {method} के माध्यम से भुगतान सफल रहा!\nआपकी बुकिंग के लिए धन्यवाद!",
+        fill_all_details_alert: "कृपया आगे बढ़ने से पहले सभी बुकिंग विवरण भरें।"
+      },
+      ta: {
+        vehicle_booking_title: "உள்ளூர் வாகன முன்பதிவு",
+        vehicle_booking_heading: "உங்கள் உள்ளூர் வாகனத்தை முன்பதிவு செய்யுங்கள்",
+        vehicle_booking_description: "சுற்றுலா அல்லது உள்ளூர் பயணத்திற்கு ஒரு சவாரி தேவையா? கீழே உங்கள் வாகனத்தை முன்பதிவு செய்யுங்கள்!",
+        select_vehicle_type: "வாகன வகையைத் தேர்ந்தெடுக்கவும்:",
+        select_option_default: "ஒரு விருப்பத்தைத் தேர்ந்தெடுக்கவும்",
+        vehicle_type_auto: "ஆட்டோ ரிக்‌ஷா",
+        vehicle_type_bike: "இரு சக்கர வாகனம்",
+        vehicle_type_sedan: "செடான்",
+        vehicle_type_suv: "எஸ்யூவி",
+        vehicle_type_van: "சுற்றுலா வேன்",
+        booking_date: "முன்பதிவு தேதி:",
+        current_location: "தற்போதைய இடம்:",
+        enter_current_location_placeholder: "தற்போதைய இடத்தைச் உள்ளிடவும்",
+        drop_location: "இறங்கும் இடம்:",
+        enter_drop_location_placeholder: "இறங்கும் இடத்தைச் உள்ளிடவும்",
+        confirm_booking_btn: "முன்பதிவை உறுதிப்படுத்து",
+        estimated_price_label: "மதிப்பிடப்பட்ட விலை:",
+        payment_method_label: "பணம் செலுத்தும் முறையைத் தேர்ந்தெடுக்கவும்:",
+        payment_card: "அட்டை மூலம் பணம் செலுத்துதல்",
+        payment_upi: "யுபிஐ",
+        payment_netbanking: "நெட் பேங்கிங்",
+        make_payment_btn: "பணம் செலுத்து",
+        back_to_services: "← சேவைகளுக்குத் திரும்பு",
+        booking_confirmed_alert: "முன்பதிவு விவரங்கள் உறுதிப்படுத்தப்பட்டன! மதிப்பிடப்பட்ட விலை: ₹{price}. பணம் செலுத்த தொடரவும்.",
+        payment_success_alert: "{date} அன்று {current} இலிருந்து {drop} வரை உங்கள் {vehicle} முன்பதிவுக்கான {method} வழியாக பணம் செலுத்துதல் வெற்றிகரமாக முடிந்தது!\nஉங்கள் முன்பதிவுக்கு நன்றி!",
+        fill_all_details_alert: "தொடர்வதற்கு முன் அனைத்து முன்பதிவு விவரங்களையும் நிரப்பவும்."
+      },
+      mr: {
+        vehicle_booking_title: "स्थानिक वाहन बुकिंग",
+        vehicle_booking_heading: "तुमचे स्थानिक वाहन बुक करा",
+        vehicle_booking_description: "प्रेक्षणीय स्थळे पाहण्यासाठी किंवा स्थानिक प्रवासासाठी वाहन हवे आहे? खाली आपले वाहन बुक करा!",
+        select_vehicle_type: "वाहनाचा प्रकार निवडा:",
+        select_option_default: "एक पर्याय निवडा",
+        vehicle_type_auto: "ऑटो रिक्षा",
+        vehicle_type_bike: "दुचाकी",
+        vehicle_type_sedan: "सेडान",
+        vehicle_type_suv: "एसयूव्ही",
+        vehicle_type_van: "टूर व्हॅन",
+        booking_date: "बुकिंगची तारीख:",
+        current_location: "वर्तमान स्थान:",
+        enter_current_location_placeholder: "वर्तमान स्थान प्रविष्ट करा",
+        drop_location: "ड्रॉप स्थान:",
+        enter_drop_location_placeholder: "ड्रॉप स्थान प्रविष्ट करा",
+        confirm_booking_btn: "बुकिंगची पुष्टी करा",
+        estimated_price_label: "अंदाजे किंमत:",
+        payment_method_label: "पैसे भरण्याची पद्धत निवडा:",
+        payment_card: "कार्ड पेमेंट",
+        payment_upi: "यूपीआय",
+        payment_netbanking: "नेट बँकिंग",
+        make_payment_btn: "पैसे भरा",
+        back_to_services: "← सेवांकडे परत",
+        booking_confirmed_alert: "बुकिंग तपशील मंजूर! अंदाजे किंमत: ₹{price}. कृपया पेमेंटसाठी पुढे जा.",
+        payment_success_alert: "{date} रोजी {current} पासून {drop} पर्यंत आपल्या {vehicle} बुकिंगसाठी {method} द्वारे पेमेंट यशस्वी झाले आहे!\nआपल्या बुकिंगसाठी धन्यवाद!",
+        fill_all_details_alert: "कृपया पुढे जाण्यापूर्वी सर्व बुकिंग तपशील भरा."
+      }
+    };
+
+    let currentLanguage = localStorage.getItem('language') || 'en';
+
+    function updateContent() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = translations[currentLanguage][key] || translations['en'][key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        el.placeholder = translations[currentLanguage][key] || translations['en'][key];
+      });
+    }
+
+    // Firebase configuration (REPLACE WITH YOUR ACTUAL CONFIG)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      databaseURL: "https://gaosaathi-871e1-default-rtdb.firebaseio.com/", // Your provided database URL
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database(); // Get a reference to the database service
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.documentElement.setAttribute('lang', currentLanguage);
+      updateContent();
+
+      const bookingForm = document.getElementById('vehicleBookingForm');
+      const makePaymentBtn = document.getElementById('makePaymentBtn');
+      const estimatedPriceDisplay = document.getElementById('estimatedPriceDisplay');
+      const priceAmount = document.getElementById('priceAmount');
+
+      // Function to generate a dummy estimated price
+      function generateEstimatedPrice() {
+        // Simple dummy logic based on vehicle type
+        const vehicleType = document.getElementById('vehicle').value;
+        let price = 0;
+        switch (vehicleType) {
+          case 'auto': price = 150 + Math.floor(Math.random() * 50); break; // 150-200
+          case 'bike': price = 100 + Math.floor(Math.random() * 50); break; // 100-150
+          case 'sedan': price = 300 + Math.floor(Math.random() * 100); break; // 300-400
+          case 'suv': price = 500 + Math.floor(Math.random() * 150); break; // 500-650
+          case 'van': price = 800 + Math.floor(Math.random() * 200); break; // 800-1000
+          default: price = 0;
+        }
+        return price;
+      }
+
+      // Handle "Confirm Booking" button click
+      bookingForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const selectedVehicle = document.getElementById('vehicle').value;
+        const bookingDate = document.getElementById('date').value;
+        const currentLocation = document.getElementById('currentLocation').value;
+        const dropLocation = document.getElementById('dropLocation').value;
+
+        if (selectedVehicle && bookingDate && currentLocation && dropLocation) {
+          const estimatedPrice = generateEstimatedPrice();
+          priceAmount.textContent = `₹${estimatedPrice.toFixed(2)}`;
+          estimatedPriceDisplay.style.display = 'block'; // Show the estimated price
+
+          // Prepare data for Firebase
+          const bookingData = {
+            vehicleType: selectedVehicle,
+            bookingDate: bookingDate,
+            currentLocation: currentLocation,
+            dropLocation: dropLocation,
+            estimatedPrice: estimatedPrice,
+            timestamp: new Date().toISOString() // Add a timestamp
+          };
+
+          // Push data to Firebase Realtime Database
+          database.ref('bookings').push(bookingData)
+            .then(() => {
+              console.log("Booking data saved to Firebase successfully!");
+              const alertMessage = translations[currentLanguage].booking_confirmed_alert.replace('{price}', estimatedPrice.toFixed(2));
+              alert(alertMessage);
+            })
+            .catch((error) => {
+              console.error("Error saving booking data to Firebase: ", error);
+              alert("Error confirming booking. Please try again.");
+            });
+
+        } else {
+          alert(translations[currentLanguage].fill_all_details_alert);
+          estimatedPriceDisplay.style.display = 'none'; // Hide if not all details are filled
+        }
+      });
+
+      // Handle "Make Payment" button click
+      makePaymentBtn.addEventListener('click', function() {
+        const selectedVehicle = document.getElementById('vehicle').value;
+        const bookingDate = document.getElementById('date').value;
+        const currentLocation = document.getElementById('currentLocation').value;
+        const dropLocation = document.getElementById('dropLocation').value;
+        const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+        const currentPrice = priceAmount.textContent; // Get the displayed price
+
+        if (selectedVehicle && bookingDate && currentLocation && dropLocation && currentPrice) {
+          // You might want to update the existing booking in Firebase with payment status
+          // For simplicity, this example just logs and alerts.
+          // In a real app, you'd likely use the key returned from the initial push for updates.
+
+          let paymentMessage = translations[currentLanguage].payment_success_alert
+            .replace('{vehicle}', translations[currentLanguage][`vehicle_type_${selectedVehicle}`] || selectedVehicle)
+            .replace('{date}', bookingDate)
+            .replace('{current}', currentLocation)
+            .replace('{drop}', dropLocation)
+            .replace('{method}', translations[currentLanguage][`payment_${selectedPaymentMethod}`] || selectedPaymentMethod);
+
+          alert(paymentMessage);
+          // In a real application, you'd send this data to a server for actual payment processing
+          // and booking finalization.
+          // You could also update Firebase here to mark the booking as paid.
+        } else {
+          alert(translations[currentLanguage].fill_all_details_alert);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

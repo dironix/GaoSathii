@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title data-i18n="login_signup_title">VillageStay - Login / Sign Up</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: url('https://i.pinimg.com/736x/d0/2b/7a/d02b7ab1dd7e3ffc128a7814179eceea.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+
+        h2 {
+            text-align: center;
+            color: #28a745; /* Green */
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+
+        form {
+            display: none;
+            flex-direction: column;
+        }
+
+        form.active {
+            display: flex;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ced4da; /* Light gray border */
+            border-radius: 6px;
+            font-size: 1em;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #28a745;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(40,167,69,.25);
+        }
+
+        button {
+            background-color: #6c757d; /* Gray */
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px; /* Increased margin */
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
+        .toggle-link {
+            margin-top: 20px; /* Adjusted margin */
+            text-align: center;
+            color: #17a2b8; /* Info blue for links */
+            cursor: pointer;
+            font-size: 0.95em;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-link:hover {
+            color: #138496; /* Darker blue on hover */
+        }
+
+        .error-message {
+            color: #dc3545; /* Red for errors */
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        /* Language specific font families, for consistent look */
+        [lang="bn"] { font-family: 'Noto Sans Bengali', sans-serif; }
+        [lang="hi"] { font-family: 'Noto Sans Devanagari', sans-serif; }
+        [lang="ta"] { font-family: 'Noto Sans Tamil', sans-serif; }
+        [lang="mr"] { font-family: 'Noto Sans', sans-serif; } /* Noto Sans is suitable for Marathi */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 id="formTitle" data-i18n="login_signup_heading">Login/Signup</h2>
+
+        <form id="loginForm" class="active">
+            <input type="email" id="loginEmail" placeholder="Email" data-i18n-placeholder="email_placeholder" required>
+            <input type="password" id="loginPassword" placeholder="Password" data-i18n-placeholder="password_placeholder" required>
+            <button type="submit" data-i18n="login_button">Login</button>
+            <p id="loginError" class="error-message"></p>
+        </form>
+
+        <form id="signupForm">
+            <input type="text" id="signupFullName" placeholder="Full Name" data-i18n-placeholder="full_name_placeholder" required>
+            <input type="email" id="signupEmail" placeholder="Email Address" data-i18n-placeholder="email_address_placeholder" required>
+            <input type="password" id="signupPassword" placeholder="Create Password" data-i18n-placeholder="create_password_placeholder" required>
+            <button type="submit" data-i18n="signup_button">Sign Up</button>
+            <p id="signupError" class="error-message"></p>
+        </form>
+
+        <div class="toggle-link" onclick="toggleForm()" data-i18n="toggle_to_signup">
+            Don't have an account? Sign Up
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC-mjAGB20eIdwUvSkCj9aPmcREIJqHy80",
+            authDomain: "gaosaathi-46418.firebaseapp.com",
+            projectId: "gaosaathi-46418",
+            storageBucket: "gaosaathi-46418.firebasestorage.app",
+            messagingSenderId: "53735737349",
+            appId: "1:53735737349:web:f11234885472731134346c",
+            measurementId: "G-6WWW7YDZYF"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Get Firebase Auth and Firestore instances
+        const auth = firebase.auth();
+        const db = firebase.firestore(); // Optional: If you want to store additional user data
+
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const toggleLink = document.querySelector('.toggle-link');
+        const formTitle = document.getElementById('formTitle');
+
+        const loginEmailInput = document.getElementById('loginEmail');
+        const loginPasswordInput = document.getElementById('loginPassword');
+        const loginErrorText = document.getElementById('loginError');
+
+        const signupFullNameInput = document.getElementById('signupFullName');
+        const signupEmailInput = document.getElementById('signupEmail');
+        const signupPasswordInput = document.getElementById('signupPassword');
+        const signupErrorText = document.getElementById('signupError');
+
+        // --- Language-related additions ---
+        const translations = {
+            en: {
+                login_signup_title: "VillageStay - Login / Sign Up",
+                login_signup_heading: "Login/Signup",
+                email_placeholder: "Email",
+                password_placeholder: "Password",
+                login_button: "Login",
+                full_name_placeholder: "Full Name",
+                email_address_placeholder: "Email Address",
+                create_password_placeholder: "Create Password",
+                signup_button: "Sign Up",
+                toggle_to_signup: "Don't have an account? Sign Up",
+                toggle_to_login: "Already have an account? Login",
+                create_account_heading: "Create an Account",
+                login_to_villagestay_heading: "Login to VillageStay",
+                alert_signup_success: "Sign up successful! Welcome, ",
+                alert_login_success: "Login successful! Welcome back.",
+                error_email_already_in_use: "This email is already in use.",
+                error_invalid_email: "Please enter a valid email address.",
+                error_weak_password: "Password should be at least 6 characters.",
+                error_signup_generic: "Error signing up. Please try again.",
+                error_incorrect_credentials: "Incorrect email or password.",
+                error_login_generic: "Error logging in. Please try again."
+            },
+            bn: {
+                login_signup_title: "VillageStay - লগইন / সাইন আপ",
+                login_signup_heading: "লগইন/সাইন আপ",
+                email_placeholder: "ইমেইল",
+                password_placeholder: "পাসওয়ার্ড",
+                login_button: "লগইন",
+                full_name_placeholder: "পুরো নাম",
+                email_address_placeholder: "ইমেইল ঠিকানা",
+                create_password_placeholder: "পাসওয়ার্ড তৈরি করুন",
+                signup_button: "সাইন আপ করুন",
+                toggle_to_signup: "অ্যাকাউন্ট নেই? সাইন আপ করুন",
+                toggle_to_login: "ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন করুন",
+                create_account_heading: "একটি অ্যাকাউন্ট তৈরি করুন",
+                login_to_villagestay_heading: "VillageStay-এ লগইন করুন",
+                alert_signup_success: "সাইন আপ সফল হয়েছে! স্বাগতম, ",
+                alert_login_success: "লগইন সফল! স্বাগতম।",
+                error_email_already_in_use: "এই ইমেইলটি ইতিমধ্যেই ব্যবহৃত হচ্ছে।",
+                error_invalid_email: "একটি বৈধ ইমেইল ঠিকানা লিখুন।",
+                error_weak_password: "পাসওয়ার্ড কমপক্ষে 6 অক্ষরের হওয়া উচিত।",
+                error_signup_generic: "সাইন আপ করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+                error_incorrect_credentials: "ভুল ইমেইল বা পাসওয়ার্ড।",
+                error_login_generic: "লগইন করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।"
+            },
+            hi: {
+                login_signup_title: "विलेजस्टे - लॉगिन / साइन अप",
+                login_signup_heading: "लॉगिन/साइन अप",
+                email_placeholder: "ईमेल",
+                password_placeholder: "पासवर्ड",
+                login_button: "लॉगिन करें",
+                full_name_placeholder: "पूरा नाम",
+                email_address_placeholder: "ईमेल पता",
+                create_password_placeholder: "पासवर्ड बनाएं",
+                signup_button: "साइन अप करें",
+                toggle_to_signup: "खाता नहीं है? साइन अप करें",
+                toggle_to_login: "पहले से खाता है? लॉगिन करें",
+                create_account_heading: "एक खाता बनाएं",
+                login_to_villagestay_heading: "विलेजस्टे में लॉगिन करें",
+                alert_signup_success: "साइन अप सफल! स्वागत है, ",
+                alert_login_success: "लॉगिन सफल! वापस स्वागत है।",
+                error_email_already_in_use: "यह ईमेल पहले से उपयोग में है।",
+                error_invalid_email: "कृपया एक वैध ईमेल पता दर्ज करें।",
+                error_weak_password: "पासवर्ड कम से कम 6 वर्णों का होना चाहिए।",
+                error_signup_generic: "साइन अप करते समय त्रुटि हुई। कृपया पुनः प्रयास करें।",
+                error_incorrect_credentials: "गलत ईमेल या पासवर्ड।",
+                error_login_generic: "लॉगिन करते समय त्रुटि हुई। कृपया पुनः प्रयास करें।"
+            },
+            ta: {
+                login_signup_title: "VillageStay - உள்நுழைவு / பதிவு",
+                login_signup_heading: "உள்நுழைவு/பதிவு",
+                email_placeholder: "மின்னஞ்சல்",
+                password_placeholder: "கடவுச்சொல்",
+                login_button: "உள்நுழைவு",
+                full_name_placeholder: "முழு பெயர்",
+                email_address_placeholder: "மின்னஞ்சல் முகவரி",
+                create_password_placeholder: "கடவுச்சொல்லை உருவாக்கவும்",
+                signup_button: "பதிவு செய்க",
+                toggle_to_signup: "கணக்கு இல்லையா? பதிவு செய்க",
+                toggle_to_login: "ஏற்கனவே கணக்கு உள்ளதா? உள்நுழையவும்",
+                create_account_heading: "ஒரு கணக்கை உருவாக்கவும்",
+                login_to_villagestay_heading: "VillageStay இல் உள்நுழையவும்",
+                alert_signup_success: "பதிவு வெற்றிகரமானது! வரவேற்கிறோம், ",
+                alert_login_success: "உள்நுழைவு வெற்றிகரமானது! மீண்டும் வருக.",
+                error_email_already_in_use: "இந்த மின்னஞ்சல் ஏற்கனவே பயன்பாட்டில் உள்ளது.",
+                error_invalid_email: "ஒரு சரியான மின்னஞ்சல் முகவரியை உள்ளிடவும்.",
+                error_weak_password: "கடவுச்சொல் குறைந்தபட்சம் 6 எழுத்துக்களைக் கொண்டிருக்க வேண்டும்.",
+                error_signup_generic: "பதிவு செய்வதில் பிழை. மீண்டும் முயற்சிக்கவும்.",
+                error_incorrect_credentials: "தவறான மின்னஞ்சல் அல்லது கடவுச்சொல்.",
+                error_login_generic: "உள்நுழைவதில் பிழை. மீண்டும் முயற்சிக்கவும்."
+            },
+            mr: {
+                login_signup_title: "व्हिलेजस्टे - लॉग इन / साइन अप",
+                login_signup_heading: "लॉग इन/साइन अप",
+                email_placeholder: "ईमेल",
+                password_placeholder: "पासवर्ड",
+                login_button: "लॉग इन",
+                full_name_placeholder: "पूर्ण नाव",
+                email_address_placeholder: "ईमेल पत्ता",
+                create_password_placeholder: "पासवर्ड तयार करा",
+                signup_button: "साइन अप करा",
+                toggle_to_signup: "खाते नाही? साइन अप करा",
+                toggle_to_login: "आधीच खाते आहे? लॉग इन करा",
+                create_account_heading: "नवीन खाते तयार करा",
+                login_to_villagestay_heading: "व्हिलेजस्टेमध्ये लॉग इन करा",
+                alert_signup_success: "साइन अप यशस्वी! आपले स्वागत आहे, ",
+                alert_login_success: "लॉग इन यशस्वी! पुन्हा स्वागत आहे.",
+                error_email_already_in_use: "हा ईमेल आधीच वापरला जात आहे.",
+                error_invalid_email: "कृपया वैध ईमेल पत्ता प्रविष्ट करा.",
+                error_weak_password: "पासवर्ड किमान 6 वर्णांचा असावा.",
+                error_signup_generic: "साइन अप करताना त्रुटी आली. कृपया पुन्हा प्रयत्न करा.",
+                error_incorrect_credentials: "चुकीचा ईमेल किंवा पासवर्ड.",
+                error_login_generic: "लॉग इन करताना त्रुटी आली. कृपया पुन्हा प्रयत्न करा।"
+            }
+        };
+
+        let currentLanguage = localStorage.getItem('language') || 'en';
+
+        function updateContent() {
+            document.documentElement.setAttribute('lang', currentLanguage); // Set lang attribute on HTML
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                el.textContent = translations[currentLanguage][key] || translations['en'][key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                el.placeholder = translations[currentLanguage][key] || translations['en'][key];
+            });
+            // Update texts that change dynamically with toggleForm
+            if (loginForm.classList.contains('active')) {
+                formTitle.textContent = translations[currentLanguage]['login_to_villagestay_heading'];
+                toggleLink.textContent = translations[currentLanguage]['toggle_to_signup'];
+            } else {
+                formTitle.textContent = translations[currentLanguage]['create_account_heading'];
+                toggleLink.textContent = translations[currentLanguage]['toggle_to_login'];
+            }
+        }
+
+        // Override toggleForm to also update language
+        function toggleForm() {
+            if (loginForm.classList.contains('active')) {
+                loginForm.classList.remove('active');
+                signupForm.classList.add('active');
+                formTitle.textContent = translations[currentLanguage]['create_account_heading'];
+                toggleLink.textContent = translations[currentLanguage]['toggle_to_login'];
+                loginErrorText.textContent = ''; // Clear errors on toggle
+                signupErrorText.textContent = ''; // Clear errors on toggle
+            } else {
+                signupForm.classList.remove('active');
+                loginForm.classList.add('active');
+                formTitle.textContent = translations[currentLanguage]['login_to_villagestay_heading'];
+                toggleLink.textContent = translations[currentLanguage]['toggle_to_signup'];
+                loginErrorText.textContent = ''; // Clear errors on toggle
+                signupErrorText.textContent = ''; // Clear errors on toggle
+            }
+        }
+
+        // Handle Sign Up
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent default form submission
+            const fullName = signupFullNameInput.value;
+            const email = signupEmailInput.value;
+            const password = signupPasswordInput.value;
+            signupErrorText.textContent = ''; // Clear previous errors
+
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // Optional: Store additional user data (like full name) in Firestore
+                await db.collection('users').doc(user.uid).set({
+                    fullName: fullName,
+                    email: email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert(translations[currentLanguage]['alert_signup_success'] + fullName);
+                
+                // Clear input fields
+                signupFullNameInput.value = '';
+                signupEmailInput.value = '';
+                signupPasswordInput.value = '';
+
+                // Redirect to the home page after successful sign up
+                window.location.href = 'InfosysProject.html'; // Set your actual home page URL here
+
+            } catch (error) {
+                console.error("Error signing up:", error);
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        signupErrorText.textContent = translations[currentLanguage]['error_email_already_in_use'];
+                        break;
+                    case 'auth/invalid-email':
+                        signupErrorText.textContent = translations[currentLanguage]['error_invalid_email'];
+                        break;
+                    case 'auth/weak-password':
+                        signupErrorText.textContent = translations[currentLanguage]['error_weak_password'];
+                        break;
+                    default:
+                        signupErrorText.textContent = translations[currentLanguage]['error_signup_generic'];
+                }
+            }
+        });
+
+        // Handle Login
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent default form submission
+            const email = loginEmailInput.value;
+            const password = loginPasswordInput.value;
+            loginErrorText.textContent = ''; // Clear previous errors
+
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                alert(translations[currentLanguage]['alert_login_success']);
+                
+                // Clear input fields
+                loginEmailInput.value = '';
+                loginPasswordInput.value = '';
+
+                // Redirect to the home page after successful login
+                window.location.href = 'InfosysProject.html'; // Set your actual home page URL here
+
+            } catch (error) {
+                console.error("Error logging in:", error);
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                    case 'auth/wrong-password':
+                        loginErrorText.textContent = translations[currentLanguage]['error_incorrect_credentials'];
+                        break;
+                    case 'auth/invalid-email':
+                        loginErrorText.textContent = translations[currentLanguage]['error_invalid_email'];
+                        break;
+                    default:
+                        loginErrorText.textContent = translations[currentLanguage]['error_login_generic'];
+                }
+            }
+        });
+
+        // Optional: Monitor authentication state changes (e.g., to update UI when a user logs in/out)
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log("User is logged in:", user.email);
+                // You can update your UI here, e.g., show a "Logout" button, hide login/signup forms
+            } else {
+                console.log("User is logged out.");
+                // You can update your UI here, e.g., show login/signup forms
+            }
+        });
+
+        // Initial content update on page load
+        document.addEventListener('DOMContentLoaded', updateContent);
+    </script>
+</body>
+</html>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="InfosysProjectstyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali&family=Noto+Sans+Devanagari&family=Noto+Sans+Tamil&family=Noto+Sans&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Basic styling for results page, you can customize this */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header, footer {
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 10px 0;
+        }
+        .results-container {
+            flex-grow: 1;
+            max-width: 960px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .result-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            padding: 15px;
+        }
+        .result-item img {
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 20px;
+            border-radius: 4px;
+        }
+        .result-details {
+            padding: 0;
+            flex-grow: 1;
+        }
+        .result-details h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 1.3em;
+        }
+        .result-details p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .price {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 10px;
+        }
+        .no-results {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 32px;
+            border: 1px solid #e2e8f0;
+        }
+        /* Message box styling */
+        #messageBox {
+            transition: opacity 0.3s ease-in-out;
+        }
+        #messageBox.hidden {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+        /* Payment method tabs styling */
+        .payment-method-tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            color: #6b7280;
+            transition: all 0.2s ease-in-out;
+        }
+        .payment-method-tab.active {
+            border-color: #8b5cf6;
+            color: #8b5cf6;
+            font-weight: 600;
+        }
+        .payment-method-tab:hover:not(.active) {
+            color: #4b5563;
+        }
+
+        /* Modal specific styling */
+        .payment-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .payment-modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            max-width: 700px; /* Adjust as needed */
+            width: 90%;
+            max-height: 90vh; /* Allow scrolling if content is too long */
+            overflow-y: auto;
+        }
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="nav-logo border">
+                <div class="logo">
+                    <img src="https://i.postimg.cc/ryQ4kbxM/Whats-App-Image-2025-07-09-at-11-07-54-AM.jpg" alt="Logo" style="height: 40px;">
+                </div>
+            </div>
+            <div class="language">
+                <i class="fa-solid fa-globe"></i>
+                <select id="language" onchange="changeLanguage()">
+                    <option value="en">English</option>
+                    <option value="bn">Bengali</option>
+                    <option value="hi">Hindi</option>
+                    <option value="ta">Tamil</option>
+                    <option value="mr">Marathi</option>
+                </select>
+            </div>
+            <div class="contact">
+                <i class="fa-solid fa-phone"></i>
+                <a href="contact.html">Contact Us</a>
+            </div>
+            <div class="terms-condition">
+                <i class="fa-solid fa-file"></i>
+                <a href="T&C.html">Terms&Condition</a>
+            </div>
+            <div class="nav-signin border">
+                <a href="signinpage.html" class="signin-link">
+                    <i class="fa-solid fa-circle-user" style="padding-right:3px"></i>
+                    <span>Login/Sign up</span>
+                </a>
+            </div>
+            <div class="nav-icon">
+                <div class="info"><a href="#"><i class="fa-solid fa-info"></i></a></div>
+                <div class="question"><a href="#"><i class="fa-solid fa-question"></i></a></div>
+                <div class="settings"><a href="#"><i class="fa-solid fa-gear"></i></a></div>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-all"><i class="fa-solid fa-bars"></i> <span>All</span></div>
+            <div class="panel-options">
+                <p class="underline">Home</p>
+                <p class="underline">Promo</p>
+                <p class="underline">Booking</p>
+                <p class="underline">Special</p>
+                <p class="underline">Blog</p>
+                <p class="underline">Contact Us</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="results-container">
+        <h1>Search Results</h1>
+        <div id="resultsList">
+        </div>
+    </div>
+
+    <div id="paymentModal" class="payment-modal-overlay hidden">
+        <div class="payment-modal-content">
+            <span class="close-button" onclick="hidePaymentModal()">&times;</span>
+            <div class="container">
+                <h1 class="text-3xl font-bold text-center text-orange-600 mb-6">Dummy Payment Form</h1>
+
+                <div class="mb-6 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <p class="text-sm text-blue-800 font-medium">Your User ID: <span id="userIdDisplay" class="font-bold break-all">Loading...</span></p>
+                </div>
+
+                <div class="p-4 bg-purple-50 rounded-lg border border-purple-200 mb-6">
+                    <h2 class="text-xl font-bold text-purple-800 mb-4">Payment Details</h2>
+                    <p class="text-sm text-red-600 mb-4 font-semibold">
+                        Disclaimer: This is a dummy payment section for demonstration purposes only. Do NOT enter real financial details.
+                    </p>
+
+                    <div class="flex border-b border-purple-300 mb-6">
+                        <div id="tabCard" class="payment-method-tab active" data-method="card">Card</div>
+                        <div id="tabUPI" class="payment-method-tab" data-method="upi">UPI</div>
+                        <div id="tabNetBanking" class="payment-method-tab" data-method="netbanking">Net Banking</div>
+                    </div>
+
+                    <form id="paymentForm" class="space-y-4">
+                        <div id="cardDetails" class="payment-content">
+                            <div class="space-y-3">
+                                <div>
+                                    <label for="cardNumber" class="block text-gray-700 font-medium mb-1">Card Number:</label>
+                                    <input type="text" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" class="w-full p-3 border border-purple-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 transition duration-200" pattern="[0-9]{16}" title="16-digit card number">
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="w-1/2">
+                                        <label for="expiryDate" class="block text-gray-700 font-medium mb-1">Expiry Date (MM/YY):</label>
+                                        <input type="text" id="expiryDate" placeholder="MM/YY" class="w-full p-3 border border-purple-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 transition duration-200" pattern="(0[1-9]|1[0-2])\/([0-9]{2})" title="MM/YY format">
+                                    </div>
+                                    <div class="w-1/2">
+                                        <label for="cvv" class="block text-gray-700 font-medium mb-1">CVV:</label>
+                                        <input type="text" id="cvv" placeholder="XXX" class="w-full p-3 border border-purple-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 transition duration-200" pattern="[0-9]{3,4}" title="3 or 4 digit CVV">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="cardholderName" class="block text-gray-700 font-medium mb-1">Cardholder Name:</label>
+                                    <input type="text" id="cardholderName" placeholder="Name on card" class="w-full p-3 border border-purple-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 transition duration-200">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="upiDetails" class="payment-content hidden">
+                            <div class="space-y-3">
+                                <div>
+                                    <label for="upiId" class="block text-gray-700 font-medium mb-1">UPI ID:</label>
+                                    <input type="text" id="upiId" placeholder="yourname@bankupi" class="w-full p-3 border border-purple-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 transition duration-200">
+                                </div>
+                                <p class="text-sm text-gray-600">
+                                    You will receive a payment request on your UPI app.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="netBankingDetails" class="payment-content hidden">
+                            <div class="space-y-3">
+                                <div>
+                                    <label for="bankSelect" class="block text-gray-700 font-medium mb-1">Select Bank:</label>
+                                    <select id="bankSelect" class="w-full p-3 border border-purple-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 transition duration-200">
+                                        <option value="">Select your bank</option>
+                                        <option value="sbi">State Bank of India</option>
+                                        <option value="hdfc">HDFC Bank</option>
+                                        <option value="icici">ICICI Bank</option>
+                                        <option value="axis">Axis Bank</option>
+                                        <option value="pnb">Punjab National Bank</option>
+                                        <option value="other">Other Bank</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="netBankingUsername" class="block text-gray-700 font-medium mb-1">Username:</label>
+                                    <input type="text" id="netBankingUsername" placeholder="Your Net Banking Username" class="w-full p-3 border border-purple-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 transition duration-200">
+                                </div>
+                                <div>
+                                    <label for="netBankingPassword" class="block text-gray-700 font-medium mb-1">Password:</label>
+                                    <input type="password" id="netBankingPassword" placeholder="Your Net Banking Password" class="w-full p-3 border border-purple-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 transition duration-200">
+                                </div>
+                                <p class="text-sm text-gray-600">
+                                    You will be redirected to your bank's portal for secure payment.
+                                </p>
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="selectedPaymentMethod" value="card">
+                        <button type="submit" class="w-full bg-purple-600 text-white p-3 rounded-lg font-semibold hover:bg-purple-700 transition duration-300 shadow-md mt-4">Simulate Payment</button>
+                    </form>
+                </div>
+
+                <div id="messageBox" class="hidden p-3 rounded-lg text-center" role="alert"></div>
+
+                <div class="mt-8 p-6 bg-yellow-50 rounded-lg border border-yellow-200">
+                    <h2 class="text-xl font-bold text-yellow-800 mb-4">Your Stored Payments (Dummy Bookings)</h2>
+                    <div id="storedPaymentsList" class="scrollable-list max-h-60 overflow-y-auto bg-white p-3 rounded-lg border border-yellow-200">
+                        <p class="text-gray-500 text-center">No payments stored yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section about">
+                <h3>About GaoSaathi</h3>
+                <p>Discover the beauty of village life, stay with us.</p>
+            </div>
+            <div class="footer-section links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Help</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h3>Contact Us</h3>
+                <p>gaosaathi123@gmail.com</p>
+                <p>+91 1234567890</p>
+                <p>Location: Kolkata</p>
+            </div>
+            <div class="footer-section social">
+                <h3>Follow Us</h3>
+                <a href="#">Facebook</a> |
+                <a href="#">Youtube</a> |
+                <a href="#">Instagram</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <i class="fa-brands fa-google"></i>
+            <i class="fa-brands fa-facebook"></i>
+            <i class="fa-brands fa-instagram"></i>
+            <i class="fa-brands fa-youtube"></i>
+            <i class="fa-brands fa-x-twitter"></i>
+            <i class="fa-brands fa-linkedin"></i>
+            <p>© 2025 GaoSaathi. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Function to show the payment modal
+        function showPaymentModal() {
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        // Function to hide the payment modal
+        function hidePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const resultsList = document.getElementById('resultsList');
+            const urlParams = new URLSearchParams(window.location.search);
+
+            const query = urlParams.get('query');
+            const checkinDate = urlParams.get('checkinDate');
+            const checkoutDate = urlParams.get('checkoutDate');
+            const numberOfRooms = urlParams.get('numberOfRooms');
+            const numberOfGuests = urlParams.get('numberOfGuests');
+
+            const mockHotels = [
+                {
+                    name: "Green Valley Homestay",
+                    location: "Himachal Pradesh",
+                    price: "₹3500/night",
+                    image: "https://www.tirthanvalleystay.com/wp-content/uploads/2024/02/461856748.webp",
+                    description: "Cozy homestay with mountain views."
+                },
+                {
+                    name: "Riverside Cottage",
+                    location: "Kerala",
+                    price: "₹4200/night",
+                    image: "https://img.traveltriangle.com/blog/wp-content/uploads/2019/11/og3.jpg",
+                    description: "Relaxing cottage by the river."
+                },
+                {
+                    name: "Rustic Farmhouse",
+                    location: "Punjab",
+                    price: "₹2800/night",
+                    image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/eb/c2/d6/punjabiyat.jpg?w=1200&h=-1&s=1",
+                    description: "Authentic village experience."
+                }
+            ];
+
+            // Display search parameters (optional, for debugging or user context)
+            const searchParamsDiv = document.createElement('div');
+            searchParamsDiv.innerHTML = `
+                <h2>Showing Results for:</h2>
+                <p><strong>Query:</strong> ${query || 'N/A'}</p>
+                <p><strong>Check-in:</strong> ${checkinDate || 'N/A'}</p>
+                <p><strong>Check-out:</strong> ${checkoutDate || 'N/A'}</p>
+                <p><strong>Rooms:</strong> ${numberOfRooms || 'N/A'}</p>
+                <p><strong>Guests:</strong> ${numberOfGuests || 'N/A'}</p>
+                <hr>
+            `;
+            resultsList.appendChild(searchParamsDiv);
+
+
+            if (mockHotels.length > 0) {
+                mockHotels.forEach(hotel => {
+                    const resultItem = document.createElement('div');
+                    resultItem.classList.add('result-item');
+                    resultItem.innerHTML = `
+                        <img src="${hotel.image}" alt="${hotel.name}">
+                        <div class="result-details">
+                            <h3>${hotel.name}</h3>
+                            <p><strong>Location:</strong> ${hotel.location}</p>
+                            <p>${hotel.description}</p>
+                            <p class="price">${hotel.price}</p>
+                            <button onclick="showPaymentModal()">View Details</button>
+                        </div>
+                    `;
+                    resultsList.appendChild(resultItem);
+                });
+            } else {
+                resultsList.innerHTML = '<p class="no-results">No results found for your search criteria.</p>';
+            }
+
+            // Language translation for the results page (optional, but good for consistency)
+            const translationsResults = {
+                en: {
+                    results_title: "Search Results",
+                    showing_results_for: "Showing Results for:",
+                    query: "Query:",
+                    check_in: "Check-in:",
+                    check_out: "Check-out:",
+                    rooms: "Rooms:",
+                    guests: "Guests:",
+                    no_results: "No results found for your search criteria.",
+                    view_details: "View Details"
+                }
+                // Add translations for bn, hi, ta, mr if needed for results page specific texts
+            };
+
+            // Function to update content for results page (simplified for this example)
+            function updateResultsPageContent() {
+                if (translationsResults[currentLanguage]) {
+                    document.title = translationsResults[currentLanguage].results_title || "Search Results";
+                }
+            }
+
+            let currentLanguage = localStorage.getItem('language') || 'en';
+            if (document.getElementById('language')) {
+                document.getElementById('language').value = currentLanguage;
+                document.documentElement.setAttribute('lang', currentLanguage);
+                updateResultsPageContent();
+            }
+
+            window.changeLanguage = function() {
+                const language = document.getElementById('language').value;
+                localStorage.setItem('language', language);
+                document.documentElement.setAttribute('lang', language);
+                currentLanguage = language;
+                updateResultsPageContent();
+            };
+        });
+    </script>
+
+    <script type="module">
+        // Firebase SDK imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // Realtime Database imports
+        import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+
+        // Global variables for Firebase config
+        // !!! IMPORTANT: Replace these with YOUR ACTUAL Firebase project credentials from the Firebase Console !!!
+        // Go to Project settings -> Your apps -> Web app -> Config
+         const firebaseConfig = {
+    apiKey: "AIzaSyBK00H5IWIqyetOy8nvQZ1Bun4X008iGxA",
+    authDomain: "gaosaathi-871e1.firebaseapp.com",
+    databaseURL: "https://gaosaathi-871e1-default-rtdb.firebaseio.com",
+    projectId: "gaosaathi-871e1",
+    storageBucket: "gaosaathi-871e1.firebasestorage.app",
+    messagingSenderId: "97738585244",
+    appId: "1:97738585244:web:401dc5ef675aa01b756959",
+    measurementId: "G-F1SSXN6146"
+  };
+        const initialAuthToken = null; // Set to your custom auth token if you're using one, otherwise leave as null for anonymous sign-in
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app); // Initialize Realtime Database
+
+        let currentUserId = null;
+        let isAuthReady = false;
+
+        // DOM Elements
+        const userIdDisplay = document.getElementById('userIdDisplay');
+        const paymentForm = document.getElementById('paymentForm');
+        const messageBox = document.getElementById('messageBox');
+        const storedPaymentsList = document.getElementById('storedPaymentsList');
+
+        // Payment DOM Elements
+        const cardNumberInput = document.getElementById('cardNumber');
+        const expiryDateInput = document.getElementById('expiryDate');
+        const cvvInput = document.getElementById('cvv');
+        const cardholderNameInput = document.getElementById('cardholderName');
+
+        // New Payment Method DOM Elements
+        const tabCard = document.getElementById('tabCard');
+        const tabUPI = document.getElementById('tabUPI');
+        const tabNetBanking = document.getElementById('tabNetBanking');
+
+        const cardDetailsDiv = document.getElementById('cardDetails');
+        const upiDetailsDiv = document.getElementById('upiDetails');
+        const netBankingDetailsDiv = document.getElementById('netBankingDetails');
+        const upiIdInput = document.getElementById('upiId');
+        const bankSelect = document.getElementById('bankSelect');
+        const netBankingUsernameInput = document.getElementById('netBankingUsername');
+        const netBankingPasswordInput = document.getElementById('netBankingPassword');
+
+        const selectedPaymentMethodInput = document.getElementById('selectedPaymentMethod');
+
+        /**
+         * Displays a message in the message box.
+         * @param {string} message - The message to display.
+         * @param {string} type - The type of message ('success', 'error', 'info').
+         */
+        function showMessage(message, type) {
+            messageBox.textContent = message;
+            messageBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800', 'bg-blue-100', 'text-blue-800');
+            if (type === 'success') {
+                messageBox.classList.add('bg-green-100', 'text-green-800');
+            } else if (type === 'error') {
+                messageBox.classList.add('bg-red-100', 'text-red-800');
+            } else {
+                messageBox.classList.add('bg-blue-100', 'text-blue-800');
+            }
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Function to switch payment methods
+        function switchPaymentMethod(method) {
+            // Hide all content divs
+            cardDetailsDiv.classList.add('hidden');
+            upiDetailsDiv.classList.add('hidden');
+            netBankingDetailsDiv.classList.add('hidden');
+
+            // Deactivate all tabs
+            tabCard.classList.remove('active');
+            tabUPI.classList.remove('active');
+            tabNetBanking.classList.remove('active');
+
+            // Show selected content and activate selected tab
+            if (method === 'card') {
+                cardDetailsDiv.classList.remove('hidden');
+                tabCard.classList.add('active');
+            } else if (method === 'upi') {
+                upiDetailsDiv.classList.remove('hidden');
+                tabUPI.classList.add('active');
+            } else if (method === 'netbanking') {
+                netBankingDetailsDiv.classList.remove('hidden');
+                tabNetBanking.classList.add('active');
+            }
+            selectedPaymentMethodInput.value = method;
+        }
+
+        // Event listeners for payment method tabs
+        tabCard.addEventListener('click', () => switchPaymentMethod('card'));
+        tabUPI.addEventListener('click', () => switchPaymentMethod('upi'));
+        tabNetBanking.addEventListener('click', () => switchPaymentMethod('netbanking'));
+
+        // Listen for changes in authentication state
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                userIdDisplay.textContent = currentUserId;
+                isAuthReady = true;
+                // Start listening for stored payments once authenticated
+                listenForStoredPayments();
+            } else {
+                // Sign in anonymously if no token is provided or user is not authenticated
+                try {
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (error) {
+                    console.error("Error signing in:", error);
+                    userIdDisplay.textContent = "Authentication Failed: Please check your Firebase config and ensure Anonymous Sign-in is enabled.";
+                    showMessage("Failed to authenticate. Please ensure Firebase config is correct and Anonymous Sign-in is enabled in your Firebase project.", "error");
+                }
+            }
+        });
+
+        /**
+         * Listens for real-time updates to the 'payments' path in Realtime Database.
+         */
+        function listenForStoredPayments() {
+            if (!isAuthReady || !currentUserId) return;
+            // Path in Realtime Database: `users/{userId}/payments`
+            const paymentsRef = ref(db, `users/${currentUserId}/payments`);
+            onValue(paymentsRef, (snapshot) => {
+                const payments = [];
+                snapshot.forEach(childSnapshot => {
+                    payments.push({ id: childSnapshot.key, ...childSnapshot.val() });
+                });
+                displayStoredPayments(payments);
+            }, (error) => {
+                console.error("Error listening to payments:", error);
+                showMessage("Error loading stored payments.", "error");
+            });
+        }
+
+        /**
+         * Displays the fetched payments.
+         * @param {Array} payments - Array of payment objects.
+         */
+        function displayStoredPayments(payments) {
+            storedPaymentsList.innerHTML = '';
+
+            if (payments.length === 0) {
+                storedPaymentsList.innerHTML = '<p class="text-gray-500 text-center">No payments stored yet.</p>';
+                return;
+            }
+
+            // Sort payments by timestamp if available
+            payments.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+            payments.forEach(payment => {
+                const paymentItem = document.createElement('div');
+                paymentItem.className = 'bg-white p-4 mb-3 rounded-lg shadow-sm border border-gray-100';
+
+                let detailsHtml = '';
+                if (payment.paymentMethod === 'Card') {
+                    detailsHtml = `
+                        <p class="text-gray-600">Card: ${payment.paymentDetails.maskedCardNumber}</p>
+                        <p class="text-gray-600">Cardholder: ${payment.paymentDetails.cardholderName}</p>
+                    `;
+                } else if (payment.paymentMethod === 'UPI') {
+                    detailsHtml = `<p class="text-gray-600">UPI ID: ${payment.paymentDetails.upiId}</p>`;
+                } else if (payment.paymentMethod === 'Net Banking') {
+                    detailsHtml = `<p class="text-gray-600">Bank: ${payment.paymentDetails.bank}</p>`;
+                }
+
+                // Format timestamp
+                const date = payment.timestamp ? new Date(payment.timestamp).toLocaleString() : 'N/A';
+
+                paymentItem.innerHTML = `
+                    <p class="font-semibold text-gray-800">Payment Method: <span class="text-blue-600">${payment.paymentMethod}</span></p>
+                    <p class="text-gray-600">Status: <span class="${payment.paymentStatus === 'Paid' ? 'text-green-600' : 'text-red-600'} font-semibold">${payment.paymentStatus}</span></p>
+                    ${detailsHtml}
+                    <p class="text-gray-600 text-sm mt-1">Date: ${date}</p>
+                `;
+                storedPaymentsList.appendChild(paymentItem);
+            });
+        }
+
+
+        // This function simulates the payment and booking confirmation
+        async function processPaymentAndBooking() {
+            if (!isAuthReady || !currentUserId) {
+                showMessage("Authentication not ready. Please wait.", "error");
+                return false;
+            }
+
+            const paymentMethod = selectedPaymentMethodInput.value;
+            let paymentDetails = {};
+            let isValid = true;
+
+            // Clear previous required attributes and validation messages
+            [cardNumberInput, expiryDateInput, cvvInput, cardholderNameInput,
+            upiIdInput, bankSelect, netBankingUsernameInput, netBankingPasswordInput].forEach(input => {
+                if (input) {
+                    input.removeAttribute('required');
+                }
+            });
+
+
+            if (paymentMethod === 'card') {
+                const cardNumber = cardNumberInput.value.trim();
+                const expiryDate = expiryDateInput.value.trim();
+                const cvv = cvvInput.value.trim();
+                const cardholderName = cardholderNameInput.value.trim();
+
+                cardNumberInput.setAttribute('required', '');
+                expiryDateInput.setAttribute('required', '');
+                cvvInput.setAttribute('required', '');
+                cardholderNameInput.setAttribute('required', '');
+
+                if (!cardNumber || !expiryDate || !cvv || !cardholderName) {
+                    showMessage("Please fill in all card details.", "error");
+                    isValid = false;
+                } else if (cardNumber.length !== 16 || isNaN(cardNumber)) {
+                    showMessage("Please enter a valid 16-digit card number.", "error");
+                    isValid = false;
+                } else if (!/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(expiryDate)) {
+                    showMessage("Please enter expiry date in MM/YY format.", "error");
+                    isValid = false;
+                } else if (!/^[0-9]{3,4}$/.test(cvv)) {
+                    showMessage("Please enter a valid 3 or 4 digit CVV.", "error");
+                    isValid = false;
+                }
+                paymentDetails = {
+                    type: 'Card',
+                    maskedCardNumber: `************${cardNumber.slice(-4)}`,
+                    cardholderName: cardholderName
+                };
+            } else if (paymentMethod === 'upi') {
+                const upiId = upiIdInput.value.trim();
+
+                upiIdInput.setAttribute('required', '');
+                if (!upiId) {
+                    showMessage("Please enter your UPI ID.", "error");
+                    isValid = false;
+                }
+                // Updated regex for more flexible UPI ID validation, includes underscores
+                else if (!/^[a-zA-Z0-9.\-_]+@[a-zA-Z0-9.\-_]+$/.test(upiId)) { 
+                     showMessage("Please enter a valid UPI ID format (e.g., username@bankname or 1234567890@upi).", "error");
+                    isValid = false;
+                }
+                paymentDetails = {
+                    type: 'UPI',
+                    upiId: upiId
+                };
+            } else if (paymentMethod === 'netbanking') {
+                const bank = bankSelect.value;
+                const username = netBankingUsernameInput.value.trim();
+                const password = netBankingPasswordInput.value.trim();
+
+                bankSelect.setAttribute('required', '');
+                netBankingUsernameInput.setAttribute('required', '');
+                netBankingPasswordInput.setAttribute('required', '');
+
+                if (!bank || !username || !password) {
+                    showMessage("Please fill in all Net Banking details.", "error");
+                    isValid = false;
+                }
+                paymentDetails = {
+                    type: 'Net Banking',
+                    bank: bank,
+                    username: username // In a real scenario, password wouldn't be stored or sent like this
+                };
+            }
+
+            if (!isValid) {
+                return false;
+            }
+
+            showMessage("Processing payment...", "info");
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate network delay
+
+            try {
+                // Dummy booking details - you would replace this with actual booking data
+                const dummyBookingDetails = {
+                    propertyName: 'Green Valley Homestay',
+                    checkin: '2025-07-20',
+                    checkout: '2025-07-25',
+                    totalPrice: '₹3500',
+                    roomsBooked: '1',
+                    guests: '2',
+                };
+                // Use push for Realtime Database to generate a unique key
+                const paymentsRef = ref(db, `users/${currentUserId}/payments`);
+                await push(paymentsRef, {
+                    ...dummyBookingDetails,
+                    paymentStatus: 'Paid',
+                    paymentMethod: paymentDetails.type,
+                    paymentDetails: paymentDetails,
+                    timestamp: Date.now() // Use Unix timestamp for Realtime Database
+                });
+                showMessage("Payment successful! Booking confirmed!", "success");
+                paymentForm.reset();
+                switchPaymentMethod('card');
+                return true;
+            } catch (e) {
+                console.error("Error simulating booking confirmation: ", e);
+                showMessage("Error confirming booking or processing payment.", "error");
+                return false;
+            }
+        }
+
+        // Event listener for the payment form submission
+        paymentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await processPaymentAndBooking();
+        });
+
+        // Initialize with Card tab active on load
+        window.onload = () => {
+            switchPaymentMethod('card');
+        };
+    </script>
+</body>
+</html>

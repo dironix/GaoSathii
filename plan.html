@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title data-i18n="tour_plan_title">Tour Plan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://thumbs.dreamstime.com/b/camayaan-village-bohol-island-philippin-philippines-213929682.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed; /* Ensures background stays fixed during scroll */
+      min-height: 100vh;
+      display: flex; /* Use flexbox for centering content */
+      align-items: center; /* Center vertically */
+      justify-content: center; /* Center horizontally */
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      padding: 30px; /* Increased padding */
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+    }
+
+    h1 {
+      text-align: center;
+      color: darkslateblue;
+      margin-bottom: 25px; /* Adjusted margin */
+      font-size: 2.5em;
+    }
+
+    .description {
+      text-align: center;
+      font-size: 1.1em; /* Slightly larger font */
+      color: #333; /* Darker color for better contrast */
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .plan {
+      margin-bottom: 25px;
+      padding: 20px; /* Increased padding */
+      background-color: #e0f2f7; /* Lighter skyblue */
+      border-radius: 8px; /* Slightly more rounded corners */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for each plan */
+      border-left: 5px solid #4682b4; /* Steelblue border on the left */
+    }
+
+    .plan h3 {
+      margin-top: 0;
+      color: #1a1a1a; /* Darker black for heading */
+      font-size: 1.3em;
+      margin-bottom: 10px;
+    }
+
+    .plan p {
+      color: #444; /* Darker black for text */
+      font-size: 1em;
+      line-height: 1.5;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 30px; /* Adjusted margin */
+      padding: 10px 20px;
+      background-color: #dc3545; /* Red button color */
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .back-link:hover {
+      background-color: #c82333; /* Darker red on hover */
+      color: #fff;
+    }
+
+    /* Language specific font families, for consistent look */
+    [lang="bn"] { font-family: 'Noto Sans Bengali', sans-serif; }
+    [lang="hi"] { font-family: 'Noto Sans Devanagari', sans-serif; }
+    [lang="ta"] { font-family: 'Noto Sans Tamil', sans-serif; }
+    [lang="mr"] { font-family: 'Noto Sans', sans-serif; } /* Noto Sans is suitable for Marathi */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 data-i18n="tour_plan_heading">Tour Plan</h1>
+    <p class="description" data-i18n="tour_plan_description">Plan your trip day-by-day with our curated travel itinerary designed for comfort, exploration, and local experiences.</p>
+
+    <div class="plan">
+      <h3 data-i18n="day1_heading">Day 1: Arrival & Local Welcome</h3>
+      <p data-i18n="day1_description">Arrive at the destination and settle into your homestay. Enjoy a traditional welcome drink, followed by a cultural introduction and local dinner.</p>
+    </div>
+
+    <div class="plan">
+      <h3 data-i18n="day2_heading">Day 2: Village Tour & Nature Walk</h3>
+      <p data-i18n="day2_description">Take a guided tour of the nearby village and participate in local activities like pottery or farming. In the evening, enjoy a scenic nature walk to the nearby hills.</p>
+    </div>
+
+    <div class="plan">
+      <h3 data-i18n="day3_heading">Day 3: Local Cuisine & Handicrafts</h3>
+      <p data-i18n="day3_description">Learn to cook authentic local dishes in the morning. In the afternoon, visit markets or local artisans and explore regional crafts.</p>
+    </div>
+
+    <div class="plan">
+      <h3 data-i18n="day4_heading">Day 4: Adventure & Departure</h3>
+      <p data-i18n="day4_description">Optional activities like ziplining or river rafting depending on location. Wrap up with a group breakfast and depart with memories and souvenirs.</p>
+    </div>
+
+    <a class="back-link" href="InfosysProject.html" data-i18n="back_to_services">← Back to Services</a>
+  </div>
+
+  <script>
+    // Define the translations object (copy from your InfosysProject.html or a centralized file)
+    const translations = {
+      en: {
+        tour_plan_title: "Tour Plan",
+        tour_plan_heading: "Tour Plan",
+        tour_plan_description: "Plan your trip day-by-day with our curated travel itinerary designed for comfort, exploration, and local experiences.",
+        day1_heading: "Day 1: Arrival & Local Welcome",
+        day1_description: "Arrive at the destination and settle into your homestay. Enjoy a traditional welcome drink, followed by a cultural introduction and local dinner.",
+        day2_heading: "Day 2: Village Tour & Nature Walk",
+        day2_description: "Take a guided tour of the nearby village and participate in local activities like pottery or farming. In the evening, enjoy a scenic nature walk to the nearby hills.",
+        day3_heading: "Day 3: Local Cuisine & Handicrafts",
+        day3_description: "Learn to cook authentic local dishes in the morning. In the afternoon, visit markets or local artisans and explore regional crafts.",
+        day4_heading: "Day 4: Adventure & Departure",
+        day4_description: "Optional activities like ziplining or river rafting depending on location. Wrap up with a group breakfast and depart with memories and souvenirs.",
+        back_to_services: "← Back to Services"
+      },
+      bn: {
+        tour_plan_title: "ভ্রমণ পরিকল্পনা",
+        tour_plan_heading: "ভ্রমণ পরিকল্পনা",
+        tour_plan_description: "আরাম, অন্বেষণ এবং স্থানীয় অভিজ্ঞতার জন্য ডিজাইন করা আমাদের কিউরেটেড ভ্রমণসূচী দিয়ে আপনার দিনের পর দিন ভ্রমণের পরিকল্পনা করুন।",
+        day1_heading: "প্রথম দিন: আগমন ও স্থানীয় অভ্যর্থনা",
+        day1_description: "গন্তব্যে পৌঁছান এবং আপনার হোমস্টেতে থাকুন। একটি ঐতিহ্যবাহী স্বাগত পানীয় উপভোগ করুন, তারপর একটি সাংস্কৃতিক পরিচিতি এবং স্থানীয় রাতের খাবার।",
+        day2_heading: "দ্বিতীয় দিন: গ্রাম ভ্রমণ ও প্রকৃতি পদচারণা",
+        day2_description: "কাছাকাছি গ্রামের একটি গাইডেড ট্যুর নিন এবং মৃৎশিল্প বা কৃষিকাজের মতো স্থানীয় কার্যক্রমে অংশ নিন। সন্ধ্যায়, কাছাকাছি পাহাড়ে একটি মনোরম প্রকৃতি পদচারণা উপভোগ করুন।",
+        day3_heading: "তৃতীয় দিন: স্থানীয় রন্ধনপ্রণালী ও হস্তশিল্প",
+        day3_description: "সকালে খাঁটি স্থানীয় খাবার রান্না শিখুন। বিকেলে, বাজার বা স্থানীয় কারিগরদের সাথে দেখা করুন এবং আঞ্চলিক কারুশিল্প অন্বেষণ করুন।",
+        day4_heading: "চতুর্থ দিন: অ্যাডভেঞ্চার ও প্রস্থান",
+        day4_4_description: "অবস্থান অনুযায়ী জিপলাইনিং বা রিভার রাফটিংয়ের মতো ঐচ্ছিক কার্যক্রম। একটি গ্রুপ ব্রেকফাস্ট দিয়ে শেষ করুন এবং স্মৃতি ও স্যুভেনির নিয়ে প্রস্থান করুন।",
+        back_to_services: "← পরিষেবাতে ফিরে যান"
+      },
+      hi: {
+        tour_plan_title: "यात्रा योजना",
+        tour_plan_heading: "यात्रा योजना",
+        tour_plan_description: "आराम, अन्वेषण और स्थानीय अनुभवों के लिए डिज़ाइन की गई हमारी क्यूरेटेड यात्रा कार्यक्रम के साथ अपनी यात्रा की दिन-प्रतिदिन योजना बनाएं।",
+        day1_heading: "पहला दिन: आगमन और स्थानीय स्वागत",
+        day1_description: "गंतव्य पर पहुंचें और अपने होमस्टे में बस जाएं। पारंपरिक स्वागत पेय का आनंद लें, जिसके बाद सांस्कृतिक परिचय और स्थानीय रात्रिभोज होगा।",
+        day2_heading: "दूसरा दिन: गाँव का दौरा और प्रकृति की सैर",
+        day2_description: "पास के गाँव का निर्देशित दौरा करें और मिट्टी के बर्तन बनाने या खेती जैसे स्थानीय गतिविधियों में भाग लें। शाम को, पास की पहाड़ियों में एक सुंदर प्रकृति की सैर का आनंद लें।",
+        day3_heading: "तीसरा दिन: स्थानीय व्यंजन और हस्तशिल्प",
+        day3_description: "सुबह में प्रामाणिक स्थानीय व्यंजन बनाना सीखें। दोपहर में, बाजारों या स्थानीय कारीगरों से मिलें और क्षेत्रीय शिल्पों का अन्वेषण करें।",
+        day4_heading: "चौथा दिन: रोमांच और प्रस्थान",
+        day4_description: "स्थान के आधार पर ज़िपलाइनिंग या रिवर राफ्टिंग जैसी वैकल्पिक गतिविधियाँ। समूह के नाश्ते के साथ समाप्त करें और यादों और स्मृति चिन्हों के साथ प्रस्थान करें।",
+        back_to_services: "← सेवाओं पर वापस"
+      },
+      ta: {
+        tour_plan_title: "சுற்றுலாத் திட்டம்",
+        tour_plan_heading: "சுற்றுலாத் திட்டம்",
+        tour_plan_description: "வசதி, ஆய்வு மற்றும் உள்ளூர் அனுபவங்களுக்காக வடிவமைக்கப்பட்ட எங்கள் பயணத் திட்டத்தின் மூலம் உங்கள் பயணத்தை நாளுக்கு நாள் திட்டமிடுங்கள்.",
+        day1_heading: "நாள் 1: வருகை மற்றும் உள்ளூர் வரவேற்பு",
+        day1_description: "இலக்கை அடைந்து உங்கள் வீட்டுத் தங்குமிடத்தில் குடியேறவும். பாரம்பரிய வரவேற்பு பானத்தை அனுபவிக்கவும், அதைத் தொடர்ந்து கலாச்சார அறிமுகம் மற்றும் உள்ளூர் இரவு உணவு.",
+        day2_heading: "நாள் 2: கிராமச் சுற்றுப்பயணம் மற்றும் இயற்கை நடை",
+        day2_description: "அருகிலுள்ள கிராமத்திற்கு வழிகாட்டப்பட்ட சுற்றுப்பயணம் செய்து, மட்பாண்டம் அல்லது விவசாயம் போன்ற உள்ளூர் நடவடிக்கைகளில் பங்கேற்கவும். மாலையில், அருகிலுள்ள மலைகளுக்கு ஒரு அழகிய இயற்கை நடைப்பயணத்தை அனுபவிக்கவும்.",
+        day3_heading: "நாள் 3: உள்ளூர் உணவு மற்றும் கைவினைப் பொருட்கள்",
+        day3_description: "காலையில் உண்மையான உள்ளூர் உணவுகளை சமைக்க கற்றுக்கொள்ளுங்கள். மதிய வேளையில், சந்தைகள் அல்லது உள்ளூர் கைவினைஞர்களைப் பார்வையிட்டு பிராந்திய கைவினைப் பொருட்களை ஆராயுங்கள்.",
+        day4_heading: "நாள் 4: சாகசம் மற்றும் புறப்பாடு",
+        day4_description: "இடத்தைப் பொறுத்து ஜிப்லைனிங் அல்லது ரிவர் ராஃப்டிங் போன்ற விருப்பமான நடவடிக்கைகள். குழு காலை உணவுடன் முடித்துவிட்டு நினைவுகளுடன் புறப்படுங்கள்.",
+        back_to_services: "← சேவைகளுக்குத் திரும்பு"
+      },
+      mr: {
+        tour_plan_title: "प्रवासाची योजना",
+        tour_plan_heading: "प्रवासाची योजना",
+        tour_plan_description: "आपल्या सहलीची दिवसानुसार योजना आमच्या खास प्रवास योजनेनुसार करा, जी आराम, शोध आणि स्थानिक अनुभवांसाठी डिझाइन केलेली आहे.",
+        day1_heading: "दिवस 1: आगमन आणि स्थानिक स्वागत",
+        day1_description: "गंतव्यस्थानी पोहोचा आणि आपल्या होमस्टेमध्ये स्थिर व्हा. पारंपारिक स्वागत पेयाचा आनंद घ्या, त्यानंतर सांस्कृतिक परिचय आणि स्थानिक रात्रीचे जेवण.",
+        day2_heading: "दिवस 2: गाव दौरा आणि निसर्गरम्य चाल",
+        day2_description: "जवळच्या गावाचा मार्गदर्शित दौरा करा आणि कुंभारकाम किंवा शेती यांसारख्या स्थानिक उपक्रमांमध्ये भाग घ्या. संध्याकाळी, जवळच्या टेकड्यांवर निसर्गरम्य चालण्याचा आनंद घ्या.",
+        day3_heading: "दिवस 3: स्थानिक पाककृती आणि हस्तकला",
+        day3_description: "सकाळी अस्सल स्थानिक पदार्थ शिजवायला शिका. दुपारी, बाजारपेठा किंवा स्थानिक कारागिरांना भेट द्या आणि प्रादेशिक हस्तकला एक्सप्लोर करा.",
+        day4_heading: "दिवस 4: साहस आणि प्रस्थान",
+        day4_description: "स्थानानुसार झिपलाइनिंग किंवा रिव्हर राफ्टिंगसारख्या पर्यायी क्रिया. ग्रुप नाश्त्यासह समाप्त करा आणि आठवणी आणि भेटवस्तू घेऊन प्रस्थान करा.",
+        back_to_services: "← सेवांकडे परत"
+      }
+    };
+
+    let currentLanguage = localStorage.getItem('language') || 'en';
+
+    function updateContent() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = translations[currentLanguage][key] || translations['en'][key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        el.placeholder = translations[currentLanguage][key] || translations['en'][key];
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.documentElement.setAttribute('lang', currentLanguage);
+      updateContent();
+    });
+  </script>
+</body>
+</html>

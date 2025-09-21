@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title data-i18n="terms_title">Terms and Conditions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://littleauthors.in/wp-content/uploads/2025/02/Pongal.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed; /* Ensures background stays fixed during scroll */
+      min-height: 100vh;
+      color: black;
+      display: flex; /* Use flexbox for centering content */
+      align-items: center; /* Center vertically */
+      justify-content: center; /* Center horizontally */
+    }
+
+    main {
+      width: 90%;
+      max-width: 700px;
+      margin: 60px auto 40px auto; /* Centered horizontally */
+      padding: 30px;
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 6px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Added subtle shadow */
+    }
+
+    h1 {
+      color: darkmagenta;
+      margin-bottom: 30px;
+      text-align: center; /* Center the main heading */
+      font-size: 2.5em;
+    }
+
+    section {
+      margin-bottom: 25px;
+    }
+
+    h2 {
+      color: darkblue;
+      font-size: 1.2em; /* Adjusted font size */
+      margin-bottom: 8px;
+      border-bottom: 1px solid #ddd; /* Lighter border for subheading */
+      padding-bottom: 4px;
+    }
+
+    p {
+      font-size: 1em; /* Adjusted font size */
+      line-height: 1.6;
+      margin: 0 0 10px;
+      color: #333; /* Darker text for readability */
+    }
+
+    .back-link {
+      display: block; /* Changed to block for centering */
+      margin: 30px auto 0 auto; /* Centered with auto margins */
+      text-align: center;
+      text-decoration: none;
+      color: #8B0000;
+      font-weight: bold;
+      font-size: 1.1em;
+      transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+      color: navy;
+    }
+
+    /* Language specific font families, for consistent look */
+    [lang="bn"] { font-family: 'Noto Sans Bengali', sans-serif; }
+    [lang="hi"] { font-family: 'Noto Sans Devanagari', sans-serif; }
+    [lang="ta"] { font-family: 'Noto Sans Tamil', sans-serif; }
+    [lang="mr"] { font-family: 'Noto Sans', sans-serif; } /* Noto Sans is suitable for Marathi */
+  </style>
+</head>
+<body>
+
+  <main>
+    <h1 data-i18n="terms_heading">Terms and Conditions</h1>
+
+    <section>
+      <h2 data-i18n="booking_payments_heading">1. Booking & Payments</h2>
+      <p data-i18n="booking_payments_description">All tours must be booked in advance. Full payment is required before the tour commences unless prior arrangements have been made.</p>
+    </section>
+
+    <section>
+      <h2 data-i18n="cancellation_policy_heading">2. Cancellation Policy</h2>
+      <p data-i18n="cancellation_policy_description">Cancellations within 24 hours of the tour will not be refunded. Please provide early notice to reschedule or cancel without penalty.</p>
+    </section>
+
+    <section>
+      <h2 data-i18n="tour_adjustments_heading">3. Tour Adjustments</h2>
+      <p data-i18n="tour_adjustments_description">Tour schedules and routes may be adjusted due to weather, road conditions, or other unforeseen circumstances.</p>
+    </section>
+
+    <section>
+      <h2 data-i18n="code_of_conduct_heading">5. Code of Conduct</h2>
+      <p data-i18n="code_of_conduct_description">Guests must be respectful toward guides, fellow travelers, and local customs. Disruptive behavior may result in removal from the tour.</p>
+    </section>
+
+    <a class="back-link" href="InfosysProject.html" data-i18n="back_to_services">← Back to Services</a>
+  </main>
+
+  <script>
+    // Define the translations object (copy from your InfosysProject.html or a centralized file)
+    const translations = {
+      en: {
+        terms_title: "Terms and Conditions",
+        terms_heading: "Terms and Conditions",
+        booking_payments_heading: "1. Booking & Payments",
+        booking_payments_description: "All tours must be booked in advance. Full payment is required before the tour commences unless prior arrangements have been made.",
+        cancellation_policy_heading: "2. Cancellation Policy",
+        cancellation_policy_description: "Cancellations within 24 hours of the tour will not be refunded. Please provide early notice to reschedule or cancel without penalty.",
+        tour_adjustments_heading: "3. Tour Adjustments",
+        tour_adjustments_description: "Tour schedules and routes may be adjusted due to weather, road conditions, or other unforeseen circumstances.",
+        code_of_conduct_heading: "5. Code of Conduct",
+        code_of_conduct_description: "Guests must be respectful toward guides, fellow travelers, and local customs. Disruptive behavior may result in removal from the tour.",
+        back_to_services: "← Back to Services"
+      },
+      bn: {
+        terms_title: "নিয়ম ও শর্তাবলী",
+        terms_heading: "নিয়ম ও শর্তাবলী",
+        booking_payments_heading: "১. বুকিং ও পেমেন্ট",
+        booking_payments_description: "সমস্ত ট্যুর আগে থেকে বুক করতে হবে। ট্যুর শুরু হওয়ার আগে সম্পূর্ণ পেমেন্ট প্রয়োজন, যদি না পূর্বের কোনো ব্যবস্থা করা থাকে।",
+        cancellation_policy_heading: "২. বাতিলকরণ নীতি",
+        cancellation_policy_description: "ট্যুরের ২৪ ঘন্টার মধ্যে বাতিল করলে কোনো ফেরত দেওয়া হবে না। জরিমানা ছাড়াই পুনরায় সময়সূচী বা বাতিল করতে অনুগ্রহ করে তাড়াতাড়ি জানান।",
+        tour_adjustments_heading: "৩. ট্যুর সমন্বয়",
+        tour_adjustments_description: "আবহাওয়া, রাস্তার অবস্থা বা অন্যান্য অপ্রত্যাশিত পরিস্থিতির কারণে ট্যুরের সময়সূচী এবং রুট সামঞ্জস্য করা যেতে পারে।",
+        code_of_conduct_heading: "৫. আচরণবিধি",
+        code_of_conduct_description: "অতিথিদের গাইড, সহযাত্রী এবং স্থানীয় রীতিনীতির প্রতি শ্রদ্ধাশীল হতে হবে। বিঘ্ন সৃষ্টিকারী আচরণের ফলে ট্যুর থেকে অপসারণ করা হতে পারে।",
+        back_to_services: "← পরিষেবাতে ফিরে যান"
+      },
+      hi: {
+        terms_title: "नियम और शर्तें",
+        terms_heading: "नियम और शर्तें",
+        booking_payments_heading: "1. बुकिंग और भुगतान",
+        booking_payments_description: "सभी टूर पहले से बुक होने चाहिए। टूर शुरू होने से पहले पूरा भुगतान आवश्यक है, जब तक कि पहले से कोई व्यवस्था न की गई हो।",
+        cancellation_policy_heading: "2. रद्दीकरण नीति",
+        cancellation_policy_description: "टूर के 24 घंटे के भीतर रद्द करने पर कोई वापसी नहीं होगी। बिना किसी दंड के पुनर्निर्धारित या रद्द करने के लिए कृपया शीघ्र सूचना दें।",
+        tour_adjustments_heading: "3. टूर समायोजन",
+        tour_adjustments_description: "मौसम, सड़क की स्थिति या अन्य अप्रत्याशित परिस्थितियों के कारण टूर के कार्यक्रम और मार्गों को समायोजित किया जा सकता है।",
+        code_of_conduct_heading: "5. आचार संहिता",
+        code_of_conduct_description: "मेहमानों को गाइड, साथी यात्रियों और स्थानीय रीति-रिवाजों के प्रति सम्मानजनक होना चाहिए। विघटनकारी व्यवहार के परिणामस्वरूप टूर से निष्कासन हो सकता है।",
+        back_to_services: "← सेवाओं पर वापस"
+      },
+      ta: {
+        terms_title: "விதிமுறைகள் மற்றும் நிபந்தனைகள்",
+        terms_heading: "விதிமுறைகள் மற்றும் நிபந்தனைகள்",
+        booking_payments_heading: "1. முன்பதிவு மற்றும் பணம் செலுத்துதல்",
+        booking_payments_description: "அனைத்து சுற்றுப்பயணங்களும் முன்கூட்டியே முன்பதிவு செய்யப்பட வேண்டும். முன்பே ஏற்பாடுகள் செய்யப்படாவிட்டால், சுற்றுப்பயணம் தொடங்குவதற்கு முன் முழு கட்டணமும் தேவை.",
+        cancellation_policy_heading: "2. ரத்து கொள்கை",
+        cancellation_policy_description: "சுற்றுப்பயணத்திற்கு 24 மணி நேரத்திற்குள் ரத்து செய்தால் பணம் திரும்பப் பெறப்படாது. அபராதம் இல்லாமல் மறுபரிசீலனை செய்ய அல்லது ரத்து செய்ய முன்கூட்டியே அறிவிக்கவும்.",
+        tour_adjustments_heading: "3. சுற்றுப்பயண மாற்றங்கள்",
+        tour_adjustments_description: "வானிலை, சாலை நிலைமைகள் அல்லது பிற எதிர்பாராத சூழ்நிலைகள் காரணமாக சுற்றுப்பயண அட்டவணைகள் மற்றும் வழிகள் சரிசெய்யப்படலாம்.",
+        code_of_conduct_heading: "5. நடத்தை விதிகள்",
+        code_of_conduct_description: "வழிகாட்டிகள், சக பயணிகள் மற்றும் உள்ளூர் பழக்கவழக்கங்களுக்கு விருந்தினர்கள் மரியாதையுடன் நடந்து கொள்ள வேண்டும். இடையூறு விளைவிக்கும் நடத்தை சுற்றுப்பயணத்திலிருந்து நீக்கப்படுவதற்கு வழிவகுக்கும்.",
+        back_to_services: "← சேவைகளுக்குத் திரும்பு"
+      },
+      mr: {
+        terms_title: "नियम आणि अटी",
+        terms_heading: "नियम आणि अटी",
+        booking_payments_heading: "1. बुकिंग आणि पेमेंट",
+        booking_payments_description: "सर्व टूर आगाऊ बुक करणे आवश्यक आहे. टूर सुरू होण्यापूर्वी पूर्ण पेमेंट आवश्यक आहे, जोपर्यंत आधीच्या व्यवस्था केलेल्या नाहीत.",
+        cancellation_policy_heading: "2. रद्द करण्याचे धोरण",
+        cancellation_policy_description: "टूरच्या 24 तासांच्या आत रद्द केल्यास परतावा दिला जाणार नाही. दंडेशिवाय पुन्हा शेड्यूल करण्यासाठी किंवा रद्द करण्यासाठी कृपया लवकर सूचना द्या.",
+        tour_adjustments_heading: "3. टूरमधील बदल",
+        tour_adjustments_description: "हवामान, रस्त्याची स्थिती किंवा इतर अनपेक्षित परिस्थितीमुळे टूरचे वेळापत्रक आणि मार्ग बदलले जाऊ शकतात.",
+        code_of_conduct_heading: "5. आचारसंहिता",
+        code_of_conduct_description: "पाहुण्यांनी गाईड्स, सहप्रवाशी आणि स्थानिक रीतीरिवाजांप्रती आदर बाळगला पाहिजे. त्रासदायक वर्तनामुळे टूरमधून काढून टाकले जाऊ शकते.",
+        back_to_services: "← सेवांकडे परत"
+      }
+    };
+
+    let currentLanguage = localStorage.getItem('language') || 'en';
+
+    function updateContent() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = translations[currentLanguage][key] || translations['en'][key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        el.placeholder = translations[currentLanguage][key] || translations['en'][key];
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.documentElement.setAttribute('lang', currentLanguage);
+      updateContent();
+    });
+  </script>
+</body>
+</html>
